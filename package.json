@@ -1,0 +1,27 @@
+{
+  "name": "microbot",
+  "version": "1.0.0",
+  "description": "A javscript framework for iot using supporting microservice programming architecture",
+  "main": "index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaneLdq/microbot.git"
+  },
+  "keywords": [
+    "iot",
+    "microservice",
+    "microbot"
+  ],
+  "dependencies": {
+    "mqtt": "^1.0.10"
+  },
+  "contributors": [
+    {
+      "name": "Jane",
+      "email": "janeldq@163.com"
+    }
+  ]
+}
