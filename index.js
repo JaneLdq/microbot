@@ -2,6 +2,8 @@
  * index.js
  * 
  */
+ var Master = require('./lib/master');
+
  module.exports = {
  	Robot: require("./lib/robot"),
 
@@ -11,4 +13,8 @@
  	Service: require("./lib/service"),
 
  	Utils: require("./lib/utils"),
+
+ 	robot: Master.createRobot,
+ 	service: Master.createService
+
 };
