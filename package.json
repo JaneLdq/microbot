@@ -16,12 +16,19 @@
     "microbot"
   ],
   "dependencies": {
+    "lodash": "^4.17.4",
     "mqtt": "^1.0.10"
   },
   "contributors": [
     {
       "name": "Jane",
       "email": "janeldq@163.com"
+    }, 
+    {
+      "name": "njusmx"
+    }, 
+    {
+      "name": "Guo Huiling"
     }
   ]
 }

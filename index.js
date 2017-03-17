@@ -10,7 +10,7 @@
  	Driver: require("./lib/driver"),
  	Adaptor: require("./lib/adaptor"),
  	
- 	Service: require("./lib/service"),
+ 	Service: require("./lib/service/service"),
 
  	Utils: require("./lib/utils"),
 
