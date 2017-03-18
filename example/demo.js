@@ -40,8 +40,12 @@ var mike = Microbot.robot({
 			};
 		},
 		callJohn: function() {
-			this.request("GET", "127.0.0.1:1001/hello", null, function(data) {
-				console.log(data);
+			this.request("127.0.0.1:1001/hello", { name: "Mike" }, 
+				function(data) {
+					console.log("Response from John: " + data);
+				}, 
+				function(err) {
+					console.log("Error: " + JSON.stringify(err));
 			});
 		}
 	}
@@ -71,4 +75,6 @@ var john = Microbot.robot({
 			return john.sayHi(name);
 		},
 	}
-}).start(true);
+});
+
+john.start(true);
