@@ -1,6 +1,5 @@
 var Microbot = require('../index.js');
 
-// robot1
 var mike = Microbot.robot({
 	name: "Mike",
 	// device和connection的实现参考cylon
@@ -10,7 +9,7 @@ var mike = Microbot.robot({
 	run: function() {
 		setInterval(function() {
 			console.log("I am Mike!");
-		}, 10000);
+		}, 30000);
 	}, 
 	// 其余的函数类型的属性是robot可以提供的功能，供service调用
 	getTemperature: function() {
@@ -59,9 +58,12 @@ var john = Microbot.robot({
 	device: {},
 	connection: {},
 	run: function() {
-		setInterval(function() {
-			console.log("I am John!");
-		}, 5000);
+		// setInterval(function() {
+		// 	console.log("I am John!");
+		// }, 60000);
+		this.service.subscribe('127.0.0.1', '/hello', function(data){
+			console.log("I am John, this is what I subscribe: " + data);
+		});
 	},
 	sayHi: function(name) {
 		return "Hi " + name + ", I am John!";
@@ -70,6 +72,7 @@ var john = Microbot.robot({
 		name: "John's Service",
 		port: 1001,
 		protocol: "http",
+		subport: 1010,
 		hello: function(name) {
 			var john = this.robot;
 			return john.sayHi(name);
@@ -78,3 +81,26 @@ var john = Microbot.robot({
 });
 
 john.start(true);
+
+var Tom = Microbot.robot({
+	name: "Tom",
+	device: {},
+	connection: {},
+	run: function() {
+		var that = this;
+		setInterval(function() {
+			var i = 0;
+			// 如果是mqtt协议的服务，则可以通过在run中使用this.service获取服务发布消息
+			that.service.publish({
+				topic: '/hello', 
+				payload: 'Hi, I am Tom!'
+			});
+		}, 5000);
+	},
+	service: {
+		name: "Tom's Service",
+		port: 1009,
+		protocol: "mqtt",
+		broker: '127.0.0.1'
+	}
+}).start(true);
