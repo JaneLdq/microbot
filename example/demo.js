@@ -10,6 +10,9 @@ var mike = Microbot.robot({
 		setInterval(function() {
 			console.log("I am Mike!");
 		}, 30000);
+		this.service.subscribe('/hello', function(data){
+			console.log("I'm Mike, this is what I subscribe: '" + data.msg + " " + data.else +"'");
+		});
 	}, 
 	// 其余的函数类型的属性是robot可以提供的功能，供service调用
 	getTemperature: function() {
@@ -24,6 +27,7 @@ var mike = Microbot.robot({
 		name: "Mike's Service",
 		port: 3001,
 		protocol: "http",
+		subport: 3002,
 		// broker属性可选，只有protocol属性是mqtt时才需要
 		// broker: 'mqtt://test.mosquitto.org',
 		// service属性内的函数发布为API，函数到路由的映射考虑在router中完成
@@ -39,13 +43,10 @@ var mike = Microbot.robot({
 			};
 		},
 		callJohn: function() {
-			this.request("127.0.0.1:1001/hello", { name: "Mike" }, 
+			this.request("127.0.0.1:1001/hell", { name: "Mike" }, 
 				function(data) {
-					console.log("Response from John: " + data);
-				}, 
-				function(err) {
-					console.log("Error: " + JSON.stringify(err));
-			});
+					console.log("Response from John: " + data.detail);
+				});
 		}
 	}
 	// true参数表示是否在robot启动时同时发布服务，若不设置参数
@@ -58,11 +59,8 @@ var john = Microbot.robot({
 	device: {},
 	connection: {},
 	run: function() {
-		// setInterval(function() {
-		// 	console.log("I am John!");
-		// }, 60000);
-		this.service.subscribe('127.0.0.1', '/hello', function(data){
-			console.log("I am John, this is what I subscribe: " + data);
+		this.service.subscribe('/hello', function(data){
+			console.log("I'm John, this is what I subscribe: '" + data.msg + " " + data.else +"'");
 		});
 	},
 	sayHi: function(name) {
@@ -82,7 +80,7 @@ var john = Microbot.robot({
 
 john.start(true);
 
-var Tom = Microbot.robot({
+var tom = Microbot.robot({
 	name: "Tom",
 	device: {},
 	connection: {},
@@ -93,7 +91,7 @@ var Tom = Microbot.robot({
 			// 如果是mqtt协议的服务，则可以通过在run中使用this.service获取服务发布消息
 			that.service.publish({
 				topic: '/hello', 
-				payload: 'Hi, I am Tom!'
+				payload: { msg: 'I am Tome', else: 'Nice to meet you!'}
 			});
 		}, 5000);
 	},
