@@ -12,7 +12,7 @@ var mike = Microbot.robot({
 		}, 30000);
 		this.service.subscribe('/tom', function(err, data){
 			if (!err) {
-				console.log("Mike gets from topic '/tom': '" + data.msg + " " + data.else +"'");
+				console.log("Mike gets from topic '/tom': '" + data.msg + " " + data.question +"'");
 			} else {
 				console.log(err);
 			}
@@ -47,7 +47,8 @@ var mike = Microbot.robot({
 		},
 		callJohn: function() {
 			this.request("127.0.0.1:1001/hello", { name: "Mike" }, 
-				function(data) {
+				function(err, data) {
+					console.log(err);
 					console.log("Response from John: " + JSON.stringify(data));
 				});
 		}
@@ -71,7 +72,7 @@ var john = Microbot.robot({
 		});
 		this.service.subscribe('/tom', function(err, data){
 			if (!err) {
-				console.log("John gets from topic '/tom': '" + data.msg + " " + data.else +"'");
+				console.log("John gets from topic '/tom': '" + data.msg + " " + data.question +"'");
 			} else {
 				console.log(err);
 			}
@@ -105,9 +106,9 @@ var tom = Microbot.robot({
 			// 如果是mqtt协议的服务，则可以通过在run中使用this.service获取服务发布消息
 			that.service.publish({
 				topic: '/tom', 
-				payload: { msg: 'I am Tom', else: 'Have you ever seen Jerry?'}
+				payload: { msg: 'I am Tom', question: 'Have you ever seen Jerry?'}
 			});
-		}, 5000);
+		}, 60000);
 	},
 	service: {
 		name: "Tom's Service",
@@ -129,7 +130,7 @@ var jerry = Microbot.robot({
 				topic: '/jerry', 
 				payload: { msg: 'I am Jerry', else: 'Nice to meet you!'}
 			});
-		}, 3000);
+		}, 30000);
 	},
 	service: {
 		name: "Jerry's Service",
