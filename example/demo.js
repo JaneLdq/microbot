@@ -10,8 +10,12 @@ var mike = Microbot.robot({
 		setInterval(function() {
 			console.log("I am Mike!");
 		}, 30000);
-		this.service.subscribe('/hello', function(data){
-			console.log("I'm Mike, this is what I subscribe: '" + data.msg + " " + data.else +"'");
+		this.service.subscribe('/tom', function(err, data){
+			if (!err) {
+				console.log("Mike gets from topic '/tom': '" + data.msg + " " + data.else +"'");
+			} else {
+				console.log(err);
+			}
 		});
 	}, 
 	// 其余的函数类型的属性是robot可以提供的功能，供service调用
@@ -24,7 +28,6 @@ var mike = Microbot.robot({
 	// 暂时只考虑一个service对应一个robot的情况，那么就可以定义robot的时候定义service，
 	// 这样对用户比较省事，但是框架的实现会复杂一点
 	service: {
-		name: "Mike's Service",
 		port: 3001,
 		protocol: "http",
 		subport: 3002,
@@ -43,9 +46,9 @@ var mike = Microbot.robot({
 			};
 		},
 		callJohn: function() {
-			this.request("127.0.0.1:1001/hell", { name: "Mike" }, 
+			this.request("127.0.0.1:1001/hello", { name: "Mike" }, 
 				function(data) {
-					console.log("Response from John: " + data.detail);
+					console.log("Response from John: " + JSON.stringify(data));
 				});
 		}
 	}
@@ -59,8 +62,19 @@ var john = Microbot.robot({
 	device: {},
 	connection: {},
 	run: function() {
-		this.service.subscribe('/hello', function(data){
-			console.log("I'm John, this is what I subscribe: '" + data.msg + " " + data.else +"'");
+		this.service.subscribe('/jerry', function(err, data){
+			if (!err) {
+				console.log("John gets from topic '/jerry': '" + data.msg + " " + data.else +"'");
+			} else {
+				console.log(err);
+			}
+		});
+		this.service.subscribe('/tom', function(err, data){
+			if (!err) {
+				console.log("John gets from topic '/tom': '" + data.msg + " " + data.else +"'");
+			} else {
+				console.log(err);
+			}
 		});
 	},
 	sayHi: function(name) {
@@ -90,14 +104,35 @@ var tom = Microbot.robot({
 			var i = 0;
 			// 如果是mqtt协议的服务，则可以通过在run中使用this.service获取服务发布消息
 			that.service.publish({
-				topic: '/hello', 
-				payload: { msg: 'I am Tome', else: 'Nice to meet you!'}
+				topic: '/tom', 
+				payload: { msg: 'I am Tom', else: 'Have you ever seen Jerry?'}
 			});
 		}, 5000);
 	},
 	service: {
 		name: "Tom's Service",
-		port: 1009,
+		protocol: "mqtt",
+		broker: '127.0.0.1'
+	}
+}).start(true);
+
+var jerry = Microbot.robot({
+	name: "Jerry",
+	device: {},
+	connection: {},
+	run: function() {
+		var that = this;
+		setInterval(function() {
+			var i = 0;
+			// 如果是mqtt协议的服务，则可以通过在run中使用this.service获取服务发布消息
+			that.service.publish({
+				topic: '/jerry', 
+				payload: { msg: 'I am Jerry', else: 'Nice to meet you!'}
+			});
+		}, 3000);
+	},
+	service: {
+		name: "Jerry's Service",
 		protocol: "mqtt",
 		broker: '127.0.0.1'
 	}
