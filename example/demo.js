@@ -1,16 +1,16 @@
-var Microbot = require('../index.js');
+let Microbot = require('../index.js');
 
-var mike = Microbot.robot({
+let mike = Microbot.robot({
 	name: "Mike",
 	// device和connection的实现参考cylon
 	device: {},
 	connection: {},
 	// robot开启之后的业务逻辑, run为保留函数名（等同于cylon的work)
 	run: function() {
-		setInterval(function() {
+		setInterval(() =>{
 			console.log("I am Mike!");
 		}, 30000);
-		this.service.subscribe('/tom', function(err, data){
+		this.service.subscribe('/tom', (err, data) => {
 			if (!err) {
 				console.log("Mike gets from topic '/tom': '" + data.msg + " " + data.question +"'");
 			} else {
@@ -36,7 +36,7 @@ var mike = Microbot.robot({
 		// service属性内的函数发布为API，函数到路由的映射考虑在router中完成
 		getTH: function() {
 			// 通过this.robots可以访问到service下的所有robot
-			var mike = this.robot;
+			let mike = this.robot;
 			return [mike.getTemperature(), mike.getHumidity()];
 		},
 		getId: function(name) {
@@ -47,9 +47,10 @@ var mike = Microbot.robot({
 		},
 		callJohn: function() {
 			this.request("127.0.0.1:1001/hello", { name: "Mike" }, 
-				function(err, data) {
-					console.log(err);
-					console.log("Response from John: " + JSON.stringify(data));
+				(err, data) => {
+					if (!err) {
+						console.log("Response from John: " + JSON.stringify(data));
+					}
 				});
 		}
 	}
@@ -58,19 +59,19 @@ var mike = Microbot.robot({
 }).start(true);
 
 // robot2
-var john = Microbot.robot({
+let john = Microbot.robot({
 	name: "John",
 	device: {},
 	connection: {},
 	run: function() {
-		this.service.subscribe('/jerry', function(err, data){
+		this.service.subscribe('/jerry', (err, data) => {
 			if (!err) {
 				console.log("John gets from topic '/jerry': '" + data.msg + " " + data.else +"'");
 			} else {
 				console.log(err);
 			}
 		});
-		this.service.subscribe('/tom', function(err, data){
+		this.service.subscribe('/tom', (err, data) => {
 			if (!err) {
 				console.log("John gets from topic '/tom': '" + data.msg + " " + data.question +"'");
 			} else {
@@ -87,7 +88,7 @@ var john = Microbot.robot({
 		protocol: "http",
 		subport: 1010,
 		hello: function(name) {
-			var john = this.robot;
+			let john = this.robot;
 			return john.sayHi(name);
 		},
 	}
@@ -95,20 +96,18 @@ var john = Microbot.robot({
 
 john.start(true);
 
-var tom = Microbot.robot({
+let tom = Microbot.robot({
 	name: "Tom",
 	device: {},
 	connection: {},
 	run: function() {
-		var that = this;
-		setInterval(function() {
-			var i = 0;
+		setInterval(() => {
 			// 如果是mqtt协议的服务，则可以通过在run中使用this.service获取服务发布消息
-			that.service.publish({
+			this.service.publish({
 				topic: '/tom', 
 				payload: { msg: 'I am Tom', question: 'Have you ever seen Jerry?'}
 			});
-		}, 60000);
+		}, 10000);
 	},
 	service: {
 		name: "Tom's Service",
@@ -117,20 +116,17 @@ var tom = Microbot.robot({
 	}
 }).start(true);
 
-var jerry = Microbot.robot({
+let jerry = Microbot.robot({
 	name: "Jerry",
 	device: {},
 	connection: {},
 	run: function() {
-		var that = this;
-		setInterval(function() {
-			var i = 0;
-			// 如果是mqtt协议的服务，则可以通过在run中使用this.service获取服务发布消息
-			that.service.publish({
+		setInterval(() => {
+			this.service.publish({
 				topic: '/jerry', 
 				payload: { msg: 'I am Jerry', else: 'Nice to meet you!'}
 			});
-		}, 30000);
+		}, 15000);
 	},
 	service: {
 		name: "Jerry's Service",

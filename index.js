@@ -12,8 +12,6 @@
  	
  	Service: require("./lib/service/service"),
 
- 	Utils: require("./lib/utils"),
-
  	robot: Master.createRobot,
  	service: Master.createService
 
