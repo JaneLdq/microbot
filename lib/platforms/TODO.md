@@ -1,0 +1,3 @@
+这个文件夹放adaptor的具体实现类
+
+暂时可以先考虑Arduino和raspberry pi
