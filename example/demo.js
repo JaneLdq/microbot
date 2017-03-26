@@ -2,10 +2,14 @@ let Microbot = require('../index.js');
 
 let mike = Microbot.robot({
 	name: "Mike",
-	// device和connection的实现参考cylon
-	device: {},
-	connection: {},
+	// devices和connections的实现参考cylon,
 	// robot开启之后的业务逻辑, run为保留函数名（等同于cylon的work)
+	devices: {
+		stub: {driver: 'stub', connection: 'stuba'}
+	},
+	connections: {
+		stub: {adaptor: 'stub'}
+	},
 	run: function() {
 		setInterval(() =>{
 			console.log("I am Mike!");
@@ -61,8 +65,8 @@ let mike = Microbot.robot({
 // robot2
 let john = Microbot.robot({
 	name: "John",
-	device: {},
-	connection: {},
+	connections: {},
+	devices: {},
 	run: function() {
 		this.service.subscribe('/jerry', (err, data) => {
 			if (!err) {

@@ -22,6 +22,9 @@
     "request-promise-native": "^1.0.3",
     "mosca": "^2.3.0"
   },
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "license": "ISC",
   "contributors": [
     {
