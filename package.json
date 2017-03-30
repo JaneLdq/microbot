@@ -16,11 +16,12 @@
     "microbot"
   ],
   "dependencies": {
-    "lodash": "^4.17.4",
-    "mqtt": "^1.0.10",
-    "request": "^2.81.0",
-    "request-promise-native": "^1.0.3",
-    "mosca": "^2.3.0"
+    "firmata": "^0.15.0",
+    "lodash": "~4.17.4",
+    "mosca": "~2.3.0",
+    "mqtt": "~1.0.10",
+    "request": "~2.81.0",
+    "request-promise-native": "~1.0.3"
   },
   "engines": {
     "node": ">=6.0.0"
