@@ -63,42 +63,45 @@ let mike = Microbot.robot({
 }).start(true);
 
 // robot2
-let john = Microbot.robot({
-	name: "John",
+let sam = Microbot.robot({
+	name: "Sam",
 	connections: {},
 	devices: {},
 	run: function() {
 		this.service.subscribe('/jerry', (err, data) => {
 			if (!err) {
-				console.log("John gets from topic '/jerry': '" + data.msg + " " + data.else +"'");
+				console.log("Sam gets from topic '/jerry': '" + data.msg + " " + data.else +"'");
 			} else {
 				console.log(err);
 			}
 		});
 		this.service.subscribe('/tom', (err, data) => {
 			if (!err) {
-				console.log("John gets from topic '/tom': '" + data.msg + " " + data.question +"'");
+				console.log("Sam gets from topic '/tom': '" + data.msg + " " + data.question +"'");
 			} else {
 				console.log(err);
 			}
 		});
 	},
 	sayHi: function(name) {
-		return "Hi " + name + ", I am John!";
+		return "Hi " + name + ", I am Sam!";
 	},
 	service: {
-		name: "John's Service",
+		name: "Sam's Service",
 		port: 1001,
 		protocol: "http",
 		subport: 1010,
 		hello: function(name) {
-			let john = this.robot;
-			return john.sayHi(name);
+			let sam = this.robot;
+			return sam.sayHi(name);
 		},
+		broker: {
+			host: '127.0.0.1'
+		}
 	}
 });
 
-john.start(true);
+sam.start(true);
 
 let tom = Microbot.robot({
 	name: "Tom",
@@ -116,7 +119,9 @@ let tom = Microbot.robot({
 	service: {
 		name: "Tom's Service",
 		protocol: "mqtt",
-		broker: '127.0.0.1'
+		broker: {
+			host: '127.0.0.1'
+		}
 	}
 }).start(true);
 
@@ -135,6 +140,8 @@ let jerry = Microbot.robot({
 	service: {
 		name: "Jerry's Service",
 		protocol: "mqtt",
-		broker: '127.0.0.1'
+		broker: {
+			host: '127.0.0.1'
+		}
 	}
 }).start(true);
