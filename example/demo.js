@@ -67,14 +67,14 @@ let sam = Microbot.robot({
 	connections: {},
 	devices: {},
 	run: function() {
-		this.service.subscribe('/jerry', (err, data) => {
+		this.service.subscribe({broker: '127.0.0.1', topic:'/jane'}, (err, data) => {
 			if (!err) {
-				console.log("Sam gets from topic '/jerry': '" + data.msg + " " + data.else +"'");
+				console.log("Sam gets from topic '/jane': '" + data.msg + " " + data.else +"'");
 			} else {
 				console.log(err);
 			}
 		});
-		this.service.subscribe({broker: '127.0.0.1', topic:'/tom'}, (err, data) => {
+		this.service.subscribe('/tom', (err, data) => {
 			if (!err) {
 				console.log("Sam gets from topic '/tom': '" + data.msg + " " + data.question +"'");
 			} else {

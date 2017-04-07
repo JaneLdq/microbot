@@ -4,7 +4,7 @@
   "description": "A javscript framework for iot using supporting microservice programming architecture",
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "mocha --recursive"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,11 @@
     "mqtt": "~1.0.10",
     "request": "~2.81.0",
     "request-promise-native": "~1.0.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "sinon": "^2.1.0"
   },
   "engines": {
     "node": ">=6.0.0"
