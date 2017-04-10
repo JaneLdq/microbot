@@ -1,0 +1,83 @@
+doctype html
+html
+  head
+  title Microbot
+  script(src='/js/bootstrap.min.js')
+  style
+    include ../public/css/bootstrap.min.css
+
+  body.container
+    nav.navbar.navbar-inverse
+      .navbar-header
+        a.navbar-brand(href='#') Microbot Monitor
+    h3 Robots
+      small= ' # ' + robots.length + ' in total'
+    .table-responsive
+      table.table.table-bordered.table-condensed
+        tr
+          th(rowspan=3) Robot
+          th(colspan=10) Connections
+        tr
+          th(rowspan=2) Name
+          th(rowspan=2) Port
+          th(rowspan=2) Infomation
+          th(colspan=2) Connected Devices
+        tr
+          th Dev Name
+          th Dev Info
+        for robot in robots
+          tr
+            td(rowspan=robot.devices.length)= robot.name
+            for conn in robot.connections
+              td(rowspan=robot.devices.length)= conn.name
+              td(rowspan=robot.devices.length)= conn.port
+              td(rowspan=robot.devices.length)
+                for val, key in conn.details
+                  p= key + ': ' + val
+              td= conn.devices[0].name
+              td
+                for val, key in conn.devices[0].details
+                  p=key + ': ' + val
+              - for (i = 1; i < conn.devices.length; i++)
+                tr
+                  td= conn.devices[i].name
+                  td
+                    for val, key in conn.devices[i].details
+                      p= key + ': ' + val
+            if robot.connections.length == 0
+              td(colspan=5).text-center.bg-danger.text-danger No connection
+    h3 Services
+      small= ' # ' + services.length + ' in total'
+    .table-responsive
+      table.table.table-bordered.table-condensed.table-responsive
+        thead
+          tr
+            th Service
+            th Protocol
+            th Port(for HTTP)
+            th SubPort(for MQTT)
+            th Broker
+            th Subscribe
+            th Publish
+            th Robots
+        tbody
+          for service in services
+            tr
+              td= service.name
+              td= service.protocol
+              td= service.port
+              td= service.subport
+              if service.broker
+                td= service.broker.host + ': ' + service.broker.port
+              else
+                td
+              td
+                for sub in service.subscriptions
+                  p= sub
+              td
+                for pub in service.publishments
+                  p= pub
+              td
+                for robot in service.robots
+                  p= robot.name
+

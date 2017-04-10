@@ -12,7 +12,5 @@
  	
  	Service: require("./lib/service/service"),
 
- 	robot: Master.createRobot,
- 	service: Master.createService
-
+ 	robot: Master.createRobot
 };

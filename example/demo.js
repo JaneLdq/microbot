@@ -5,10 +5,10 @@ let mike = Microbot.robot({
 	// devices和connections的实现参考cylon,
 	// robot开启之后的业务逻辑, run为保留函数名（等同于cylon的work)
 	devices: {
-		stub: {driver: 'stub', connection: 'stuba'}
+		stub: {driver: 'stub', connection: 'stub'}
 	},
 	connections: {
-		stub: {adaptor: 'stub'}
+		stub: {adaptor: 'stub', port: 'COM1'}
 	},
 	run: function() {
 		setInterval(() =>{
@@ -87,7 +87,7 @@ let sam = Microbot.robot({
 	},
 	service: {
 		name: "Sam's Service",
-		port: 1001,
+		port: 1002,
 		protocol: "http",
 		subport: 1010,
 		hello: function(name) {
