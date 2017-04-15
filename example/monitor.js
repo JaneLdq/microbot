@@ -3,7 +3,7 @@ let Microbot = require('../index.js');
 let mike = Microbot.robot({
 	name: "Mike",
 	devices: {
-		stubDev1: {driver: 'stub', connection: 'stub', version: '2.1.3'},
+		led: {driver: 'led', connection: 'stub', version: '2.1.3'},
 		stubDev2: {driver: 'stub', connection: 'stub', version: '2.1.3'}
 	},
 	connections: {
