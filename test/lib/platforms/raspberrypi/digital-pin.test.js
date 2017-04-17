@@ -31,36 +31,36 @@ describe("DigitalPin",() =>{
 	describe(".connect", () =>{
 		const path = "sys/class/gpio/gpio4";
 		
-	    context("if the GPIO file for the pin exists", () = > {
-	        beforeEach(() = > {
+	    context("if the GPIO file for the pin exists", () => {
+	        beforeEach(() => {
 	          stub(fs, "exists").callsArgWith(1, true);
 	          stub(pin, "_openPin");
 	        });
 
-	        afterEach(() = > {
+	        afterEach(() => {
 	          fs.exists.restore();
 	          pin._openPin.restore();
 	        });
 
-	        it("opens the pin", () = > {
+	        it("opens the pin", () => {
 	          pin.connect(pin.mode);
 	          expect(fs.exists).to.be.calledWith(path);
 	          expect(pin._openPin).to.be.called;
 	        });
 	      });
 
-	      context("if the GPIO file for the pin doesn't exist", () = > {
-	        beforeEach(() = > {
+	      context("if the GPIO file for the pin doesn't exist", () => {
+	        beforeEach(() => {
 	          stub(fs, "exists").callsArgWith(1, false);
 	          stub(pin, "_createGPIOPin");
 	        });
 
-	        afterEach(() = > {
+	        afterEach(() => {
 	          fs.exists.restore();
 	          pin._createGPIOPin.restore();
 	        });
 
-	        it("creates a new GPIO pin", () = > {
+	        it("creates a new GPIO pin", () => {
 	          pin.connect(pin.mode);
 	          expect(fs.exists).to.be.calledWith(path);
 	          expect(pin._createGPIOPin).to.be.called;
@@ -68,162 +68,162 @@ describe("DigitalPin",() =>{
 	      });
 	});
 	
-	describe(".close", () = > {
+	describe(".close", () => {
 		  const path = "/sys/class/gpio/unexport";
 
-		  beforeEach(() = > {
+		  beforeEach(() => {
 		    stub(fs, "writeFile").callsArgWith(2, false);
 		    stub(pin, "_closeCallback");
 		  });
 
-		  afterEach(() = > {
+		  afterEach(() => {
 		    fs.writeFile.restore();
 		    pin._closeCallback.restore();
 		  });
 
-		  it("writes to the GPIO unexport path with the pin's value", () = > {
+		  it("writes to the GPIO unexport path with the pin's value", () => {
 		    pin.close();
 		    expect(fs.writeFile).to.be.calledWith(path, "4");
 		  });
 
-		  it("calls the closeCallback", () = > {
+		  it("calls the closeCallback", () => {
 		    pin.close();
 		    expect(pin._closeCallback).to.be.calledWith(false);
 		  });
 	 });
 
-	 describe(".closeSync", () = > {
+	 describe(".closeSync", () => {
 		   const path = "/sys/class/gpio/unexport";
 
-		   beforeEach(()  = >{
+		   beforeEach(()  =>{
 		     stub(fs, "writeFileSync");
 		     stub(pin, "_closeCallback");
 		   });
 
-		   afterEach(() = > {
+		   afterEach(() => {
 		     fs.writeFileSync.restore();
 		     pin._closeCallback.restore();
 		   });
 
-		   it("writes to the GPIO unexport path with the pin's value", () = > {
+		   it("writes to the GPIO unexport path with the pin's value", () => {
 		     pin.closeSync();
 		     expect(fs.writeFileSync).to.be.calledWith(path, "4");
 		   });
 
-		   it("calls the closeCallback", () = > {
+		   it("calls the closeCallback", () => {
 		     pin.closeSync();
 		     expect(pin._closeCallback).to.be.calledWith(false);
 		   });
 		 });
 	 
-	 describe(".digitalWrite", () = > {
+	 describe(".digitalWrite", () => {
 		   const path = "/sys/class/gpio/gpio4/value";
 
-		   context("if pin mode isn't 'w'", () = > {
-		     beforeEach(() = > {
+		   context("if pin mode isn't 'w'", () => {
+		     beforeEach(() => {
 		       stub(fs, "writeFile");
 		       stub(pin, "_setMode");
 		     });
 
-		     afterEach(() = > {
+		     afterEach(() => {
 		       fs.writeFile.restore();
 		       pin._setMode.restore();
 		     });
 
-		     it("sets the pin mode to 'w'", () = > {
+		     it("sets the pin mode to 'w'", () => {
 		       pin.mode = "r";
 		       pin.digitalWrite(1);
 		       expect(pin._setMode).to.be.calledWith("w");
 		     });
 		   });
 
-		   context("when successful", () = > {
-		       beforeEach(() = > {
+		   context("when successful", () => {
+		       beforeEach(() => {
 		           pin.mode = "w";
 		           stub(fs, "writeFile").callsArgWith(2, null);
 		           stub(pin, "emit");
 		       });
 
-		       afterEach(() = > {
+		       afterEach(() => {
 		           fs.writeFile.restore();
 		           pin.emit.restore();
 		        });
 
-		   it("emits a digitalWrite event with the written value", () = > {
+		   it("emits a digitalWrite event with the written value", () => {
 		        pin.digitalWrite(1);
 		        expect(fs.writeFile).to.be.calledWith(path, 1);
 		        expect(pin.emit).to.be.calledWith("digitalWrite", 1);
 		   });
 
-		   it("returns the passed value", () = > {
+		   it("returns the passed value", () => {
 		        expect(pin.digitalWrite(1)).to.be.eql(1);
 		   });
 
-		   it("changes the pin's <status>", () = > {
+		   it("changes the pin's <status>", () => {
 		        pin.status = "low";
 		        pin.digitalWrite(1);
 		        expect(pin.status).to.be.eql("high");
 		    });
 		   });
 
-		    context("when there is an error", () = > {
-		      beforeEach(() = > {
+		    context("when there is an error", () => {
+		      beforeEach(() => {
 		        pin.mode = "w";
 		        stub(fs, "writeFile").callsArgWith(2, true);
 		        stub(pin, "emit");
 		      });
 
-		      afterEach(() = > {
+		      afterEach(() => {
 		        fs.writeFile.restore();
 		        pin.emit.restore();
 		      });
 
-		      it("emits an error message", () = > {
+		      it("emits an error message", () => {
 		        pin.digitalWrite(1);
 		        expect(pin.emit).to.be.calledWith("error");
 		      });
 		    });
 		    
 		    
-		    describe(".digitalRead", () = > {
-		        beforeEach(() = > {
+		    describe(".digitalRead", () => {
+		        beforeEach(() => {
 		          this.clock = sinon.useFakeTimers();
 		        });
 
-		        afterEach(() = > {
+		        afterEach(() => {
 		          this.clock.restore();
 		        });
 
-		        context("if the mode isn't 'r'", () = > {
-		          beforeEach(() = > {
+		        context("if the mode isn't 'r'", () => {
+		          beforeEach(() => {
 		            stub(Utils, "every");
 		            stub(pin, "_setMode");
 		          });
 
-		          afterEach(() = > {
+		          afterEach(() => {
 		            Utils.every.restore();
 		            pin._setMode.restore();
 		          });
 
-		          it("sets the pin mode to 'r'", () = > {
+		          it("sets the pin mode to 'r'", () => {
 		            pin.mode = "w";
 		            pin.digitalRead(500);
 		            expect(pin._setMode).to.be.calledWith("r");
 		          });
 		        });
 
-		        context("when successful", () = > {
-		          beforeEach(() = > {
+		        context("when successful", () => {
+		          beforeEach(() => {
 		            stub(fs, "readFile").callsArgWith(1, null, 1);
 		            stub(pin, "emit");
 		          });
 
-		          afterEach(() = > {
+		          afterEach(() => {
 		            fs.readFile.restore();
 		            pin.emit.restore();
 		          });
 
-		          it("requests the pin value on the specified interval", () = > {
+		          it("requests the pin value on the specified interval", () => {
 		            pin.digitalRead(500);
 		            this.clock.tick(510);
 
@@ -233,7 +233,7 @@ describe("DigitalPin",() =>{
 		            expect(fs.readFile).to.be.calledTwice;
 		          });
 
-		          it("emits a 'digitalRead' event with the data recieved", () = > {
+		          it("emits a 'digitalRead' event with the data recieved", () => {
 		            pin.digitalRead(500);
 		            this.clock.tick(510);
 
@@ -241,18 +241,18 @@ describe("DigitalPin",() =>{
 		          });
 		        });
 
-		        context("when an error occurs", () = > {
-		          beforeEach(() = > {
+		        context("when an error occurs", () => {
+		          beforeEach(() => {
 		            stub(fs, "readFile").callsArgWith(1, true, null);
 		            stub(pin, "emit");
 		          });
 
-		          afterEach(() = > {
+		          afterEach(() => {
 		            fs.readFile.restore();
 		            pin.emit.restore();
 		          });
 
-		          it("emits an error message", () = > {
+		          it("emits an error message", () => {
 		            pin.digitalRead(500);
 		            this.clock.tick(500);
 
@@ -264,268 +264,268 @@ describe("DigitalPin",() =>{
 		    
 		  });
 
-	  describe(".setHigh", () = > {
-		    beforeEach(() = > {
+	  describe(".setHigh", () => {
+		    beforeEach(() => {
 		      stub(pin, "digitalWrite");
 		    });
 
-		    afterEach(() = > {
+		    afterEach(() => {
 		      pin.digitalWrite.restore();
 		    });
 
-		    it("calls .digitalWrite with a value of 1", () = > {
+		    it("calls .digitalWrite with a value of 1", () => {
 		      pin.setHigh();
 		      expect(pin.digitalWrite).to.be.calledWith(1);
 		    });
 		  });
 
-		  describe(".setLow", () = > {
-		    beforeEach(() = > {
+		  describe(".setLow", () => {
+		    beforeEach(() => {
 		      stub(pin, "digitalWrite");
 		    });
 
-		    afterEach(() = > {
+		    afterEach(() => {
 		      pin.digitalWrite.restore();
 		    });
 
-		    it("calls .digitalWrite with a value of 0", () = > {
+		    it("calls .digitalWrite with a value of 0", () => {
 		      pin.setLow();
 		      expect(pin.digitalWrite).to.be.calledWith(0);
 		    });
 		  });
 
-		  describe(".toggle", () = > {
-		    context("when <status> is 'high'", () = > {
-		      beforeEach(() = > {
+		  describe(".toggle", () => {
+		    context("when <status> is 'high'", () => {
+		      beforeEach(() => {
 		        stub(pin, "setLow");
 		        pin.status = "high";
 		      });
 
-		      afterEach(() = > {
+		      afterEach(() => {
 		        pin.setLow.restore();
 		      });
 
-		      it("calls .setLow", () = > {
+		      it("calls .setLow", () => {
 		        pin.toggle();
 		        expect(pin.setLow).to.be.called;
 		      });
 		    });
 
-		    context("when <status> is 'low'", () = > {
-		      beforeEach(() = > {
+		    context("when <status> is 'low'", () => {
+		      beforeEach(() => {
 		        stub(pin, "setHigh");
 		        pin.status = "low";
 		      });
 
-		      afterEach(() = > {
+		      afterEach(() => {
 		        pin.setHigh.restore();
 		      });
 
-		      it("calls .setHigh", () = > {
+		      it("calls .setHigh", () => {
 		        pin.toggle();
 		        expect(pin.setHigh).to.be.called;
 		      });
 		    });
 		  });
 
-		  describe("._createGPIOPin", () = > {
+		  describe("._createGPIOPin", () => {
 		    const path = "/sys/class/gpio/export";
 
-		    context("when successful", () = > {
-		      beforeEach(() = > {
+		    context("when successful", () => {
+		      beforeEach(() => {
 		        stub(fs, "writeFile").callsArgWith(2, null);
 		        stub(pin, "_openPin");
 		      });
 
-		      afterEach(() = > {
+		      afterEach(() => {
 		        fs.writeFile.restore();
 		        pin._openPin.restore();
 		      });
 
-		      it("writes the pin number to the GPIO export path", () = > {
+		      it("writes the pin number to the GPIO export path", () => {
 		        pin._createGPIOPin();
 		        expect(fs.writeFile).to.be.calledWith(path, "4");
 		      });
 
-		      it("calls ._openPin", () = > {
+		      it("calls ._openPin", () => {
 		        pin._createGPIOPin();
 		        expect(pin._openPin).to.be.called;
 		      });
 		    });
 
-		    context("when an error occurs", () = > {
-		      beforeEach(() = > {
+		    context("when an error occurs", () => {
+		      beforeEach(() => {
 		        stub(fs, "writeFile").callsArgWith(2, true);
 		        stub(pin, "emit");
 		      });
 
-		      afterEach(() = > {
+		      afterEach(() => {
 		        fs.writeFile.restore();
 		        pin.emit.restore();
 		      });
 
-		      it("emits an error", () = > {
+		      it("emits an error", () => {
 		        pin._createGPIOPin();
 		        expect(pin.emit).to.be.calledWith("error");
 		      });
 		    });
 		  });
 
-		  describe("._openPin", () = > {
-		    beforeEach(() = > {
+		  describe("._openPin", () => {
+		    beforeEach(() => {
 		      stub(pin, "_setMode");
 		      stub(pin, "emit");
 		    });
 
-		    afterEach(() = > {
+		    afterEach(() => {
 		      pin._setMode.restore();
 		      pin.emit.restore();
 		    });
 
-		    it("sets the pin's mode", () = > {
+		    it("sets the pin's mode", () => {
 		      pin._openPin();
 		      expect(pin._setMode).to.be.calledWith(pin.mode);
 		    });
 
-		    it("emits the 'open' event", () = > {
+		    it("emits the 'open' event", () => {
 		      pin._openPin();
 		      expect(pin.emit).to.be.calledWith("open");
 		    });
 		  });
 
-		  describe("_closeCallback", () = > {
-		    context("if there is an error", () = > {
-		      beforeEach(() = > {
+		  describe("_closeCallback", () => {
+		    context("if there is an error", () => {
+		      beforeEach(() => {
 		        stub(pin, "emit");
 		        pin._closeCallback(true);
 		      });
 
-		      afterEach(() = > {
+		      afterEach(() => {
 		        pin.emit.restore();
 		      });
 
-		      it("emits an error", () = > {
+		      it("emits an error", () => {
 		        expect(pin.emit).to.be.calledWith("error");
 		      });
 		    });
 
-		    context("if there is no error", () = > {
-		      beforeEach(() = > {
+		    context("if there is no error", () => {
+		      beforeEach(() => {
 		        stub(pin, "emit");
 		        pin._closeCallback(false);
 		      });
 
-		      afterEach(() = > {
+		      afterEach(() => {
 		        pin.emit.restore();
 		      });
 
-		      it("emits a 'close' event with the pin number", () = > {
+		      it("emits a 'close' event with the pin number", () => {
 		        expect(pin.emit).to.be.calledWith("close", "4");
 		      });
 		    });
 		  });
 
-		  describe("._setMode", () = > {
+		  describe("._setMode", () => {
 		    const path = "/sys/class/gpio/gpio4/direction";
 
-		    beforeEach(() = > {
+		    beforeEach(() => {
 		      stub(fs, "writeFile").callsArgWith(2, "error");
 		      stub(pin, "_setModeCallback");
 		    });
 
-		    afterEach(() = > {
+		    afterEach(() => {
 		      fs.writeFile.restore();
 		      pin._setModeCallback.restore();
 		    });
 
-		    context("when mode is 'w'", () = > {
-		      it("writes to the pin's direction path with 'out'", () = > {
+		    context("when mode is 'w'", () => {
+		      it("writes to the pin's direction path with 'out'", () => {
 		        pin._setMode("w");
 		        expect(fs.writeFile).to.be.calledWith(path, "out");
 		      });
 
-		      it("calls ._setModeCallback with any error message", () = > {
+		      it("calls ._setModeCallback with any error message", () => {
 		        pin._setMode("w", true);
 		        expect(pin._setModeCallback).to.be.calledWith("error", true);
 		      });
 		    });
 
-		    context("when mode is 'r'", () = > {
-		      it("writes to the pin's direction path with 'in'", () = > {
+		    context("when mode is 'r'", () => {
+		      it("writes to the pin's direction path with 'in'", () => {
 		        pin._setMode("r");
 		        expect(fs.writeFile).to.be.calledWith(path, "in");
 		      });
 		    });
 		  });
 
-		  describe("._setModeCallback", () = > {
-		    beforeEach(() = > {
+		  describe("._setModeCallback", () => {
+		    beforeEach(() => {
 		      stub(pin, "emit");
 		    });
 
-		    afterEach(() = > {
+		    afterEach(() => {
 		      pin.emit.restore();
 		    });
 
-		    context("when successful", () = > {
-		      it("sets <ready> to true", () = > {
+		    context("when successful", () => {
+		      it("sets <ready> to true", () => {
 		        pin.ready = false;
 		        pin._setModeCallback(false);
 		        expect(pin.ready).to.be.eql(true);
 		      });
 
-		      context("when emitConnect is true", () = > {
-		        it("emits a 'connect' event with the pin's mode", () = > {
+		      context("when emitConnect is true", () => {
+		        it("emits a 'connect' event with the pin's mode", () => {
 		          pin._setModeCallback(false, true);
 		          expect(pin.emit).to.be.calledWith("connect", pin.mode);
 		        });
 		      });
 		    });
 
-		    context("when passed an error", () = > {
-		      it("emits an error", () = > {
+		    context("when passed an error", () => {
+		      it("emits an error", () => {
 		        pin._setModeCallback(true);
 		        expect(pin.emit).to.be.calledWith("error");
 		      });
 		    });
 		  });
 
-		  describe("._pinPath", () = > {
+		  describe("._pinPath", () => {
 		    const path = "/sys/class/gpio/gpio4";
 
-		    it("returns the path to the GPIO pin", () = > {
+		    it("returns the path to the GPIO pin", () => {
 		      expect(pin._pinPath()).to.be.eql(path);
 		    });
 		  });
 
-		  describe("._directionPath", () = > {
+		  describe("._directionPath", () => {
 		    const path = "/sys/class/gpio/gpio4/direction";
 
-		    it("returns the path to the GPIO pin's direction file", () = > {
+		    it("returns the path to the GPIO pin's direction file", () => {
 		      expect(pin._directionPath()).to.be.eql(path);
 		    });
 		  });
 
-		  describe("._valuePath", () = > {
+		  describe("._valuePath", () => {
 		    const path = "/sys/class/gpio/gpio4/value";
 
-		    it("returns the path to the GPIO pin's value file", () = > {
+		    it("returns the path to the GPIO pin's value file", () => {
 		      expect(pin._valuePath()).to.be.eql(path);
 		    });
 		  });
 
-		  describe("._exportPath", () = > {
+		  describe("._exportPath", () => {
 		    const path = "/sys/class/gpio/export";
 
-		    it("returns the GPIO export path", () = > {
+		    it("returns the GPIO export path", () => {
 		      expect(pin._exportPath()).to.be.eql(path);
 		    });
 		  });
 
-		  describe("._unexportPath", () = > {
+		  describe("._unexportPath", () => {
 		    const path = "/sys/class/gpio/unexport";
 
-		    it("returns the GPIO unexport path", () = > {
+		    it("returns the GPIO unexport path", () => {
 		      expect(pin._unexportPath()).to.be.eql(path);
 		    });
 		  });

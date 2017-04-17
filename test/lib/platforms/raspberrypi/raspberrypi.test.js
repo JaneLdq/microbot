@@ -10,38 +10,38 @@ const Raspberrypi = adaptor("raspberrypi"),
       PwmPin = lib("pwm-pin"),
       MockI2C = lib("i2c");
 
-describe("Adaptor.Raspberrypi", () = > {
+describe("Adaptor.Raspberrypi", () => {
   const adaptor;
 
-  beforeEach(() = > {
+  beforeEach(() => {
     adaptor = new Raspberrypi();
   });
 
-  it("is an instance of Cylon.Adaptor", () = > {
+  it("is an instance of Cylon.Adaptor", () => {
     expect(adaptor).to.be.an.instanceOf(Raspberrypi);
     expect(adaptor).to.be.an.instanceOf(Cylon.Adaptor);
   });
 
-  describe("constructor", () = > {
-    it("sets <board> to empty string by default", () = > {
+  describe("constructor", () => {
+    it("sets <board> to empty string by default", () => {
       expect(adaptor.board).to.be.eql("");
     });
 
-    it("sets <pins> to an empty object by default", () = > {
+    it("sets <pins> to an empty object by default", () => {
       expect(adaptor.pins).to.be.eql({});
     });
 
-    it("sets <pwmPins> to an empty object by default", () = > {
+    it("sets <pwmPins> to an empty object by default", () => {
       expect(adaptor.pwmPins).to.be.eql({});
     });
 
-    it("sets <i2cDevices> to an empty object by default", () = > {
+    it("sets <i2cDevices> to an empty object by default", () => {
       expect(adaptor.i2cDevices).to.be.eql({});
     });
   });
 
-  describe(".commands", () = > {
-    it("is an array of Raspberrypi commands", () = > {
+  describe(".commands", () => {
+    it("is an array of Raspberrypi commands", () => {
       expect(adaptor.commands).to.be.an("array");
 
       adaptor.commands.forEach(function(cmd) {
@@ -50,10 +50,10 @@ describe("Adaptor.Raspberrypi", () = > {
     });
   });
 
-  describe(".connect", () = > {
+  describe(".connect", () => {
     const callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       callback = spy();
 
       adaptor.proxyMethods = spy();
@@ -61,7 +61,7 @@ describe("Adaptor.Raspberrypi", () = > {
       adaptor.connect(callback);
     });
 
-    it("proxies methods to the board", () = > {
+    it("proxies methods to the board", () => {
       expect(adaptor.proxyMethods).to.be.calledWith(
         adaptor.commands,
         adaptor.board,
@@ -69,7 +69,7 @@ describe("Adaptor.Raspberrypi", () = > {
       );
     });
 
-    it("sets <revision> based on CPU info", () = > {
+    it("sets <revision> based on CPU info", () => {
       expect(adaptor.revision).to.be.eql("rev2");
 
       adaptor._cpuinfo.returns("Revision : 0001");
@@ -81,7 +81,7 @@ describe("Adaptor.Raspberrypi", () = > {
       expect(adaptor.revision).to.be.eql("rev3");
     });
 
-    it("sets <i2cInterface> based on CPU info", () = > {
+    it("sets <i2cInterface> based on CPU info", () => {
       expect(adaptor.bus).to.be.eql(1);
 
       adaptor._cpuinfo.returns("Revision : 0001");
@@ -89,15 +89,15 @@ describe("Adaptor.Raspberrypi", () = > {
       expect(adaptor.bus).to.be.eql(0);
     });
 
-    it("triggers the callback", () = > {
+    it("triggers the callback", () => {
       expect(callback).to.be.called;
     });
   });
 
-  describe(".disconnect", () = > {
+  describe(".disconnect", () => {
     const disconnect, callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       disconnect = spy();
       callback = spy();
 
@@ -108,29 +108,29 @@ describe("Adaptor.Raspberrypi", () = > {
       adaptor.disconnect(callback);
     });
 
-    it("disconnects all pins", () = > {
+    it("disconnects all pins", () => {
       expect(adaptor._disconnectPins).to.be.called;
     });
 
-    it("emits 'disconnect'", () = > {
+    it("emits 'disconnect'", () => {
       expect(disconnect).to.be.called;
     });
 
-    it("triggers the callback", () = > {
+    it("triggers the callback", () => {
       expect(callback).to.be.called;
     });
   });
 
-  describe(".firmwareName", () = > {
-    it("returns 'Raspberry Pi'", () = > {
+  describe(".firmwareName", () => {
+    it("returns 'Raspberry Pi'", () => {
       expect(adaptor.firmwareName()).to.be.eql("Raspberry Pi");
     });
   });
 
-  describe(".digitalRead", () = > {
+  describe(".digitalRead", () => {
     const pin, callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       callback = spy();
 
       pin = { on: stub(), digitalRead: stub(), connect: stub() };
@@ -142,38 +142,38 @@ describe("Adaptor.Raspberrypi", () = > {
       adaptor.digitalRead(3, callback);
     });
 
-    it("sets the pin to read mode", () = > {
+    it("sets the pin to read mode", () => {
       expect(adaptor._digitalPin).to.be.calledWith(3);
     });
 
-    it("attaches a listener for 'digitalRead'", () = > {
+    it("attaches a listener for 'digitalRead'", () => {
       expect(pin.on).to.be.calledWith("digitalRead");
     });
 
-    it("attaches a listener for 'connect'", () = > {
+    it("attaches a listener for 'connect'", () => {
       expect(pin.on).to.be.calledWith("connect");
     });
 
-    it("connects to the pin", () = > {
+    it("connects to the pin", () => {
       expect(pin.connect).to.be.called;
     });
 
-    describe("when 'connect' is triggered", () = > {
-      beforeEach(() = > {
+    describe("when 'connect' is triggered", () => {
+      beforeEach(() => {
         pin.on.withArgs("connect").yield();
       });
 
-      it("calls .digitalRead on the pin", () = > {
+      it("calls .digitalRead on the pin", () => {
         expect(pin.digitalRead).to.be.calledWith(20);
       });
     });
 
-    describe("when 'digitalRead' is triggered", () = > {
-      beforeEach(() = > {
+    describe("when 'digitalRead' is triggered", () => {
+      beforeEach(() => {
         pin.on.withArgs("digitalRead").yield(1);
       });
 
-      it("responds with the pin value", () = > {
+      it("responds with the pin value", () => {
         expect(adaptor.respond).to.be.calledWith(
           "digitalRead",
           callback,
@@ -185,10 +185,10 @@ describe("Adaptor.Raspberrypi", () = > {
     });
   });
 
-  describe(".digitalWrite", () = > {
+  describe(".digitalWrite", () => {
     const pin, callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       callback = spy();
 
       pin = { on: stub(), digitalWrite: stub(), connect: stub() };
@@ -200,38 +200,38 @@ describe("Adaptor.Raspberrypi", () = > {
       adaptor.digitalWrite(3, 1, callback);
     });
 
-    it("sets the pin to Write mode", () = > {
+    it("sets the pin to Write mode", () => {
       expect(adaptor._digitalPin).to.be.calledWith(3);
     });
 
-    it("attaches a listener for 'digitalWrite'", () = > {
+    it("attaches a listener for 'digitalWrite'", () => {
       expect(pin.on).to.be.calledWith("digitalWrite");
     });
 
-    it("attaches a listener for 'connect'", () = > {
+    it("attaches a listener for 'connect'", () => {
       expect(pin.on).to.be.calledWith("connect");
     });
 
-    it("connects to the pin", () = > {
+    it("connects to the pin", () => {
       expect(pin.connect).to.be.called;
     });
 
-    describe("when 'connect' is triggered", () = > {
-      beforeEach(() = > {
+    describe("when 'connect' is triggered", () => {
+      beforeEach(() => {
         pin.on.withArgs("connect").yield();
       });
 
-      it("calls .digitalWrite on the pin", () = > {
+      it("calls .digitalWrite on the pin", () => {
         expect(pin.digitalWrite).to.be.calledWith(1);
       });
     });
 
-    describe("when 'digitalWrite' is triggered", () = > {
-      beforeEach(() = > {
+    describe("when 'digitalWrite' is triggered", () => {
+      beforeEach(() => {
         pin.on.withArgs("digitalWrite").yield(1);
       });
 
-      it("responds with the pin value", () = > {
+      it("responds with the pin value", () => {
         expect(adaptor.respond).to.be.calledWith(
           "digitalWrite",
           callback,
@@ -243,10 +243,10 @@ describe("Adaptor.Raspberrypi", () = > {
     });
   });
 
-  describe(".i2cWrite", () = > {
+  describe(".i2cWrite", () => {
     const device, callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       callback = spy();
 
       device = { write: stub() };
@@ -257,7 +257,7 @@ describe("Adaptor.Raspberrypi", () = > {
       adaptor.i2cWrite(0x4a, "cmd", [1, 2, 3], callback);
     });
 
-    it("writes a command and buffer to an i2c device", () = > {
+    it("writes a command and buffer to an i2c device", () => {
       expect(adaptor._i2cDevice).to.be.calledWith(0x4a);
       expect(device.write).to.be.calledWith("cmd", [1, 2, 3]);
 
@@ -265,12 +265,12 @@ describe("Adaptor.Raspberrypi", () = > {
       expect(device.write).to.be.calledWith("cmd", []);
     });
 
-    describe("when done writing", () = > {
-      beforeEach(() = > {
+    describe("when done writing", () => {
+      beforeEach(() => {
         device.write.yield();
       });
 
-      it("responds with the address, command, and buffer", () = > {
+      it("responds with the address, command, and buffer", () => {
         expect(adaptor.respond).to.be.calledWith(
           "i2cWrite", callback, null, 0x4a, "cmd", [1, 2, 3]
         );
@@ -278,10 +278,10 @@ describe("Adaptor.Raspberrypi", () = > {
     });
   });
 
-  describe(".i2cRead", () = > {
+  describe(".i2cRead", () => {
     const device, callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       callback = spy();
 
       device = { read: stub() };
@@ -292,17 +292,17 @@ describe("Adaptor.Raspberrypi", () = > {
       adaptor.i2cRead(0x4a, "cmd", 1024, callback);
     });
 
-    it("reads from an i2c device", () = > {
+    it("reads from an i2c device", () => {
       expect(adaptor._i2cDevice).to.be.calledWith(0x4a);
       expect(device.read).to.be.calledWith("cmd", 1024);
     });
 
-    describe("when done reading", () = > {
-      beforeEach(() = > {
+    describe("when done reading", () => {
+      beforeEach(() => {
         device.read.yield("err", "data");
       });
 
-      it("responds with the error and data", () = > {
+      it("responds with the error and data", () => {
         expect(adaptor.respond).to.be.calledWith(
           "i2cRead", callback, "err", "data"
         );
@@ -310,20 +310,20 @@ describe("Adaptor.Raspberrypi", () = > {
     });
   });
 
-  describe("._i2cDevice", () = > {
-    context("if the device already exists", () = > {
-      beforeEach(() = > {
+  describe("._i2cDevice", () => {
+    context("if the device already exists", () => {
+      beforeEach(() => {
         adaptor.i2cDevices[0x4a] = "a device";
-        MockI2C.openSync = () = > {};
+        MockI2C.openSync = () => {};
       });
 
-      it("returns it", () = > {
+      it("returns it", () => {
         expect(adaptor._i2cDevice(0x4a)).to.be.eql("a device");
       });
     });
 
-    context("if the device doesn't exist", () = > {
-      it("creates a new one", () = > {
+    context("if the device doesn't exist", () => {
+      it("creates a new one", () => {
         expect(adaptor.i2cDevices[0x4a]).to.be.undefined;
         adaptor._i2cDevice(0x4a);
         expect(adaptor.i2cDevices[0x4a]).to.be.an.instanceOf(I2CDevice);
@@ -331,10 +331,10 @@ describe("Adaptor.Raspberrypi", () = > {
     });
   });
 
-  describe("._pwmWrite", () = > {
+  describe("._pwmWrite", () => {
     const pin, callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       pin = { on: stub(), servoWrite: stub(), pwmWrite: stub() };
       callback = spy();
 
@@ -344,37 +344,37 @@ describe("Adaptor.Raspberrypi", () = > {
       adaptor._pwmWrite(10, 1, callback);
     });
 
-    it("calls ._pwmPin to get the pin", () = > {
+    it("calls ._pwmPin to get the pin", () => {
       expect(adaptor._pwmPin).to.be.called;
     });
 
-    it("calls pin.pwmWrite with the provided value", () = > {
+    it("calls pin.pwmWrite with the provided value", () => {
       expect(pin.pwmWrite).to.be.calledWith(1);
     });
 
-    context("when the 'pwmWrite' event is triggered", () = > {
-      beforeEach(() = > {
+    context("when the 'pwmWrite' event is triggered", () => {
+      beforeEach(() => {
         pin.on.withArgs("pwmWrite").yield();
       });
 
-      it("responds with the written value", () = > {
+      it("responds with the written value", () => {
         expect(adaptor.respond).to.be.calledWith(
           "pwmWrite", callback, null, 1, 10
         );
       });
     });
 
-    context("when 'type' is 'servo'", () = > {
-      beforeEach(() = > {
+    context("when 'type' is 'servo'", () => {
+      beforeEach(() => {
         adaptor._pwmWrite(12, 0, callback, "servo");
         pin.on.withArgs("pwmWrite").yield();
       });
 
-      it("calls pin.servoWrite", () = > {
+      it("calls pin.servoWrite", () => {
         expect(pin.servoWrite).to.be.calledWith(0);
       });
 
-      it("responds with 'servoWrite' when done", () = > {
+      it("responds with 'servoWrite' when done", () => {
         expect(adaptor.respond).to.be.calledWith(
           "servoWrite", callback, null, 0, 12
         );
@@ -382,53 +382,53 @@ describe("Adaptor.Raspberrypi", () = > {
     });
   });
 
-  describe(".pwmWrite", () = > {
+  describe(".pwmWrite", () => {
     const callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       callback = spy();
       adaptor._pwmWrite = spy();
 
       adaptor.pwmWrite(10, 20, callback);
     });
 
-    it("calls ._pwmWrite", () = > {
+    it("calls ._pwmWrite", () => {
       expect(adaptor._pwmWrite).to.be.calledWith(10, 20, callback, "pwm");
     });
   });
 
-  describe(".servoWrite", () = > {
+  describe(".servoWrite", () => {
     const callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       callback = spy();
       adaptor._pwmWrite = spy();
 
       adaptor.servoWrite(10, 20, callback);
     });
 
-    it("calls ._pwmWrite", () = > {
+    it("calls ._pwmWrite", () => {
       expect(adaptor._pwmWrite).to.be.calledWith(10, 20, callback, "servo");
     });
   });
 
-  describe("_pwmPin", () = > {
-    beforeEach(() = > {
+  describe("_pwmPin", () => {
+    beforeEach(() => {
       adaptor._translatePin = function(n) { return n + 1; };
     });
 
-    context("if the pin is already initialized", () = > {
-      beforeEach(() = > {
+    context("if the pin is already initialized", () => {
+      beforeEach(() => {
         adaptor.pwmPins[7] = "pwm pin";
       });
 
-      it("returns it", () = > {
+      it("returns it", () => {
         expect(adaptor._pwmPin(6)).to.be.eql("pwm pin");
       });
     });
 
-    context("if the pin isn't initialized", () = > {
-      it("instantiates a PwmPin", () = > {
+    context("if the pin isn't initialized", () => {
+      it("instantiates a PwmPin", () => {
         const pin = adaptor._pwmPin(6);
         expect(pin).to.be.an.instanceOf(PwmPin);
         expect(pin).to.be.eql(adaptor.pwmPins[7]);
@@ -436,23 +436,23 @@ describe("Adaptor.Raspberrypi", () = > {
     });
   });
 
-  describe("_digitalPin", () = > {
-    beforeEach(() = > {
+  describe("_digitalPin", () => {
+    beforeEach(() => {
       adaptor._translatePin = function(n) { return n + 1; };
     });
 
-    context("if the pin is already initialized", () = > {
-      beforeEach(() = > {
+    context("if the pin is already initialized", () => {
+      beforeEach(() => {
         adaptor.pins[7] = "digital pin";
       });
 
-      it("returns it", () = > {
+      it("returns it", () => {
         expect(adaptor._digitalPin(6)).to.be.eql("digital pin");
       });
     });
 
-    context("if the pin isn't initialized", () = > {
-      it("instantiates a digitalPin", () = > {
+    context("if the pin isn't initialized", () => {
+      it("instantiates a digitalPin", () => {
         const pin = adaptor._digitalPin(6);
         expect(pin).to.be.an.instanceOf(Cylon.IO.DigitalPin);
         expect(pin).to.be.eql(adaptor.pins[7]);
@@ -460,8 +460,8 @@ describe("Adaptor.Raspberrypi", () = > {
     });
   });
 
-  describe("._translatePin", () = > {
-    it("translates pin numbers based on board revision", () = > {
+  describe("._translatePin", () => {
+    it("translates pin numbers based on board revision", () => {
       expect(adaptor._translatePin(7)).to.be.eql(4);
 
       adaptor.revision = "rev1";
@@ -472,12 +472,12 @@ describe("Adaptor.Raspberrypi", () = > {
     });
   });
 
-  describe("_disconnectPins", () = > {
+  describe("_disconnectPins", () => {
     function mockPin() {
       return { closeSync: spy() };
     }
 
-    it("closes all pins and pwmPins", () = > {
+    it("closes all pins and pwmPins", () => {
       const pins = adaptor.pins = [ mockPin(), mockPin(), mockPin() ];
       const pwmPins = adaptor.pwmPins = [ mockPin(), mockPin(), mockPin() ];
 
@@ -493,16 +493,16 @@ describe("Adaptor.Raspberrypi", () = > {
     });
   });
 
-  describe("._cpuinfo", () = > {
-    beforeEach(() = > {
+  describe("._cpuinfo", () => {
+    beforeEach(() => {
       stub(fs, "readFileSync").returns("cpu info");
     });
 
-    afterEach(() = > {
+    afterEach(() => {
       fs.readFileSync.restore();
     });
 
-    it("reads from /proc/cpuinfo", () = > {
+    it("reads from /proc/cpuinfo", () => {
       const res = adaptor._cpuinfo();
 
       expect(fs.readFileSync).to.be.called;

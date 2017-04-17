@@ -33,11 +33,11 @@ function compareBuffers(a, b) {
   return true;
 }
 
-describe("I2CDevice", () = > {
+describe("I2CDevice", () => {
   const device, wire;
 
-  beforeEach(() = > {
-    MockI2C.openSync = () = > {
+  beforeEach(() => {
+    MockI2C.openSync = () => {
     };
 
     device = new I2CDevice({
@@ -47,30 +47,30 @@ describe("I2CDevice", () = > {
     device.connect();
   });
 
-  it("is an EventEmitter", () = > {
+  it("is an EventEmitter", () => {
     expect(device).to.be.an.instanceOf(EventEmitter);
   });
 
-  describe("constructor", () = > {
-    it("sets <address> to the provided address", () = > {
+  describe("constructor", () => {
+    it("sets <address> to the provided address", () => {
       expect(device.address).to.be.eql(0x4A);
     });
 
-    it("sets <bus> to the provided interface", () = > {
+    it("sets <bus> to the provided interface", () => {
       expect(device.bus).to.be.eql(1);
     });
   });
 
-  describe(".write", () = > {
+  describe(".write", () => {
     const callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       callback = spy();
       wire = device.i2cWire = { i2cWrite: spy() };
       device.write("command", [1, 2, 3], callback);
     });
 
-    it("writes a set of bytes to the I2C connection", () = > {
+    it("writes a set of bytes to the I2C connection", () => {
       const call = wire.i2cWrite.firstCall;
 
       const bufsMatch = compareBuffers(
@@ -83,16 +83,16 @@ describe("I2CDevice", () = > {
     });
   });
 
-  describe(".read", () = > {
+  describe(".read", () => {
     const callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       callback = spy();
       wire = device.i2cWire = { readI2cBlock: spy() };
       device.read("c", 1024, callback);
     });
 
-    it("reads register from I2C connection", () = > {
+    it("reads register from I2C connection", () => {
       const call = wire.readI2cBlock.firstCall;
 
       expect(call.args[0]).to.be.eql(0x4A);
@@ -101,30 +101,30 @@ describe("I2CDevice", () = > {
     });
   });
 
-  describe(".writeByte", () = > {
+  describe(".writeByte", () => {
     const callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       callback = spy();
       wire = device.i2cWire = { sendByte: spy() };
       device.writeByte(1, callback);
     });
 
-    it("writes a single byte to the I2C connection", () = > {
+    it("writes a single byte to the I2C connection", () => {
       expect(wire.sendByte).to.be.calledWith(0x4A, 1, callback);
     });
   });
 
-  describe(".readByte", () = > {
+  describe(".readByte", () => {
     const callback;
 
-    beforeEach(() = > {
+    beforeEach(() => {
       callback = spy();
       wire = device.i2cWire = { receiveByte: spy() };
       device.readByte(callback);
     });
 
-    it("reads a single byte from the I2C connection", () = > {
+    it("reads a single byte from the I2C connection", () => {
       expect(wire.receiveByte).to.be.calledWith(0x4A, callback);
     });
   });
