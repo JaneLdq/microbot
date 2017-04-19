@@ -1,3 +1,4 @@
+//demo for led and button, use button to control the led
 let Microbot = require('../index.js');
 
 let mike = Microbot.robot({
@@ -8,7 +9,8 @@ let mike = Microbot.robot({
 		button: {driver: 'button', connection: 'arduino_A', pin: 2}
 	},
 	connections: {
-		arduino_A: {adaptor: 'arduino', port: 'COM3'}
+		// arduino_A: {adaptor: 'arduino', port: 'COM3'}
+		arduino_A: {adaptor: 'arduino', port: '/dev/cu.usbmodem1421'}
 		// arduino_B: {adaptor: 'arduino', port: 'COM3'}
 	},
 	run: function() {
