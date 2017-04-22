@@ -67,9 +67,9 @@ let sam = Microbot.robot({
 	connections: {},
 	devices: {},
 	run: function() {
-		this.service.subscribe({broker: '127.0.0.1', topic:'/tom'}, (err, data) => {
+		this.service.subscribe({broker: '127.0.0.1', topic:'/jerry'}, (err, data) => {
 			if (!err) {
-				console.log("Sam gets from topic '/tom': '" + data.msg + " " + data.else +"'");
+				console.log("Sam gets from topic '/jerry': '" + data.msg + " " + data.else +"'");
 			} else {
 				console.log(err);
 			}
@@ -93,9 +93,6 @@ let sam = Microbot.robot({
 		hello: function(name) {
 			let sam = this.robot;
 			return sam.sayHi(name);
-		},
-		broker: {
-			host: '192.168.1.107'
 		}
 	}
 }).start();
