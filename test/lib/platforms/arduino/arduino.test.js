@@ -141,23 +141,22 @@ describe('Adaptor.Arduino', () => {
 		});
 	});
 
-	describe('.analogWrite', () => {
+	describe('.pwmWrite', () => {
 		beforeEach(() => {
 			arduino._board = {
 				pinMode: spy(),
-				analogWrite: spy(),
-				analogPins: { a1: 3 },
-				MODES: { ANALOG: 'a'}
+				pwmWrite: spy(),
+				MODES: { PWM: 'p'}
 			};
-			arduino.analogWrite('a1', 0.2);
+			arduino.pwmWrite(9, 0.2);
 		});
 
 		it('sets the pin mode of a specified pin', () => {
-			expect(arduino._board.pinMode.calledWith(3, 'a')).to.be.ok;
+			expect(arduino._board.pinMode.calledWith(9, 'p')).to.be.ok;
 		});
 
 		it('write analog value to the specified pin', () => {
-			expect(arduino._board.analogWrite.calledWith(3, 51)).to.be.ok;
+			expect(arduino._board.pwmWrite.calledWith(9, 51)).to.be.ok;
 		});
 	});
 
@@ -207,7 +206,7 @@ describe('Adaptor.Arduino', () => {
 				servoWrite: spy(),
 				MODES:{ SERVO: 's' }
 			}
-			arduino.servoWrite(2, 0.5);
+			arduino.servoWrite(2, 90);
 		});
 
 		it('sets the pin mode to servo', () => {
@@ -337,7 +336,7 @@ describe('Adaptor.Arduino', () => {
 				i2cConfig: spy(),
 				i2cWrite: spy()
 			};
-			arduino.i2cWrite('address', 'register', ['a', 'b', 'c']);
+			arduino.i2cWrite('address', ['a', 'b', 'c'], 0);
 		});
 
 		context('when i2c is not configured', () => {
@@ -346,8 +345,8 @@ describe('Adaptor.Arduino', () => {
 				expect(arduino._board.i2cConfig.calledWith(2000)).to.be.ok;
 			});
 
-			it('calls _board.i2cWrite to read specified number of bytes', () => {
-				expect(arduino._board.i2cWrite.calledWith('address', 'register', ['a', 'b', 'c'])).to.be.ok;
+			it('calls _board.i2cWrite to write data to the board', () => {
+				expect(arduino._board.i2cWrite.calledWith('address', 0, ['a', 'b', 'c'])).to.be.ok;
 			});
 
 		});
@@ -357,7 +356,7 @@ describe('Adaptor.Arduino', () => {
 				arduino.i2cReady = true;
 				arduino.i2cConfig = spy();
 			});
-			it('calls _board.i2cWrite to read specified number of bytes without calling i2cConfig', () => {
+			it('calls _board.i2cWrite to write data to the board without calling i2cConfig', () => {
 				expect(arduino.i2cConfig).not.to.be.called;
 			});
 		});
