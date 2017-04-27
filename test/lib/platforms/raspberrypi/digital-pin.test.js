@@ -183,86 +183,84 @@ describe("DigitalPin",() =>{
 		        expect(pin.emit.calledWith("error")).to.be.ok;
 		      });
 		    });
-		    
-		    
-		    describe(".digitalRead", () => {
-		        beforeEach(() => {
-		          this.clock = sinon.useFakeTimers();
-		        });
-
-		        afterEach(() => {
-		          this.clock.restore();
-		        });
-
-		        context("if the mode isn't 'r'", () => {
-		          beforeEach(() => {
-		            stub(Utils, "every");
-		            stub(pin, "_setMode");
-		          });
-
-		          afterEach(() => {
-		            Utils.every.restore();
-		            pin._setMode.restore();
-		          });
-
-		          it("sets the pin mode to 'r'", () => {
-		            pin.mode = "w";
-		            pin.digitalRead(500);
-		            expect(pin._setMode.calledWith("r")).to.be.ok;
-		          });
-		        });
-
-		        context("when successful", () => {
-		          beforeEach(() => {
-		            stub(fs, "readFile").callsArgWith(1, null, 1);
-		            stub(pin, "emit");
-		          });
-
-		          afterEach(() => {
-		            fs.readFile.restore();
-		            pin.emit.restore();
-		          });
-
-		          it("requests the pin value on the specified interval", () => {
-		            pin.digitalRead(500);
-		            this.clock.tick(510);
-
-		            expect(fs.readFile).to.be.calledOnce;
-
-		            this.clock.tick(500);
-		            expect(fs.readFile).to.be.calledTwice;
-		          });
-
-		          it("emits a 'digitalRead' event with the data recieved", () => {
-		            pin.digitalRead(500);
-		            this.clock.tick(510);
-
-		            expect(pin.emit.calledWith("digitalRead", 1)).to.be.ok;
-		          });
-		        });
-
-		        context("when an error occurs", () => {
-		          beforeEach(() => {
-		            stub(fs, "readFile").callsArgWith(1, true, null);
-		            stub(pin, "emit");
-		          });
-
-		          afterEach(() => {
-		            fs.readFile.restore();
-		            pin.emit.restore();
-		          });
-
-		          it("emits an error message", () => {
-		            pin.digitalRead(500);
-		            this.clock.tick(500);
-
-		            expect(pin.emit.calledWith("error")).to.be.ok;
-		          });
-		        });
-		      });
-		    
-		    
 		  });
+
+
+     describe(".digitalRead", () => {
+    	 beforeEach(() => {
+         this.clock = sinon.useFakeTimers();
+         });
+
+         afterEach(() => {
+         this.clock.restore();
+         });
+
+         context("if the mode isn't 'r'", () => {
+           beforeEach(() => {
+           stub(Utils, "every");
+           stub(pin, "_setMode");
+         });
+
+          afterEach(() => {
+    Utils.every.restore();
+pin._setMode.restore();
+});
+
+it("sets the pin mode to 'r'", () => {
+    pin.mode = "w";
+pin.digitalRead(500);
+expect(pin._setMode.calledWith("r")).to.be.ok;
+});
+});
+
+context("when successful", () => {
+    beforeEach(() => {
+    stub(fs, "readFile").callsArgWith(1, null, 1);
+    stub(pin, "emit");
+});
+
+afterEach(() => {
+    fs.readFile.restore();
+pin.emit.restore();
+});
+
+it("requests the pin value on the specified interval", () => {
+    pin.digitalRead(500);
+this.clock.tick(510);
+
+expect(fs.readFile).to.be.calledOnce;
+
+this.clock.tick(500);
+expect(fs.readFile).to.be.calledTwice;
+});
+
+it("emits a 'digitalRead' event with the data recieved", () => {
+    pin.digitalRead(500);
+this.clock.tick(510);
+
+expect(pin.emit.calledWith("digitalRead", 1)).to.be.ok;
+});
+});
+
+context("when an error occurs", () => {
+    beforeEach(() => {
+    stub(fs, "readFile").callsArgWith(1, true, null);
+    stub(pin, "emit");
+});
+
+afterEach(() => {
+    fs.readFile.restore();
+pin.emit.restore();
+});
+
+it("emits an error message", () => {
+    pin.digitalRead(500);
+this.clock.tick(500);
+
+expect(pin.emit.calledWith("error")).to.be.ok;
+});
+});
+});
 
 	  describe(".setHigh", () => {
 		    beforeEach(() => {
