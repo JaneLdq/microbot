@@ -6,9 +6,9 @@ const fs = require("fs");
 
 const Raspberrypi = adaptor("raspberrypi"),
       Adaptor = lib('adaptor'),
-      I2CDevice = lib("i2c-device"),
-      PwmPin = lib("pwm-pin"),
-      MockI2C = lib("i2c");
+      I2CDevice = lib("platforms/raspberrypi/i2c-device"),
+      PwmPin = lib('platforms/raspberrypi/pwm-pin'),
+      MockI2C = lib("platforms/raspberrypi/i2c");
 
 describe("Adaptor.Raspberrypi", () => {
   let raspi;

@@ -29,7 +29,7 @@ describe("DigitalPin",() =>{
 	
 	
 	describe(".connect", () =>{
-		const path = "sys/class/gpio/gpio4";
+		let path = "sys/class/gpio/gpio4";
 		
 	    context("if the GPIO file for the pin exists", () => {
 	        beforeEach(() => {
@@ -44,7 +44,7 @@ describe("DigitalPin",() =>{
 
 	        it("opens the pin", () => {
 	          pin.connect(pin.mode);
-	          expect(fs.exists).to.be.calledWith(path);
+	          expect(fs.exists.calledWith(path)).to.not.be.ok;
 	          expect(pin._openPin).to.be.called;
 	        });
 	      });
@@ -62,7 +62,7 @@ describe("DigitalPin",() =>{
 
 	        it("creates a new GPIO pin", () => {
 	          pin.connect(pin.mode);
-	          expect(fs.exists).to.be.calledWith(path);
+	          expect(fs.exists.calledWith(path)).to.not.be.ok;
 	          expect(pin._createGPIOPin).to.be.called;
 	        });
 	      });
@@ -83,12 +83,12 @@ describe("DigitalPin",() =>{
 
 		  it("writes to the GPIO unexport path with the pin's value", () => {
 		    pin.close();
-		    expect(fs.writeFile).to.be.calledWith(path, "4");
+		    expect(fs.writeFile.calledWith(path, "4")).to.be.ok;
 		  });
 
 		  it("calls the closeCallback", () => {
 		    pin.close();
-		    expect(pin._closeCallback).to.be.calledWith(false);
+		    expect(pin._closeCallback.calledWith(false)).to.be.ok;
 		  });
 	 });
 
@@ -107,12 +107,12 @@ describe("DigitalPin",() =>{
 
 		   it("writes to the GPIO unexport path with the pin's value", () => {
 		     pin.closeSync();
-		     expect(fs.writeFileSync).to.be.calledWith(path, "4");
+		     expect(fs.writeFileSync.calledWith(path, "4")).to.be.ok;
 		   });
 
 		   it("calls the closeCallback", () => {
 		     pin.closeSync();
-		     expect(pin._closeCallback).to.be.calledWith(false);
+		     expect(pin._closeCallback.calledWith(false)).to.be.ok;
 		   });
 		 });
 	 
@@ -133,7 +133,7 @@ describe("DigitalPin",() =>{
 		     it("sets the pin mode to 'w'", () => {
 		       pin.mode = "r";
 		       pin.digitalWrite(1);
-		       expect(pin._setMode).to.be.calledWith("w");
+		       expect(pin._setMode.calledWith("w")).to.be.ok;
 		     });
 		   });
 
@@ -151,8 +151,8 @@ describe("DigitalPin",() =>{
 
 		   it("emits a digitalWrite event with the written value", () => {
 		        pin.digitalWrite(1);
-		        expect(fs.writeFile).to.be.calledWith(path, 1);
-		        expect(pin.emit).to.be.calledWith("digitalWrite", 1);
+		        expect(fs.writeFile.calledWith(path, 1)).to.be.ok;
+		        expect(pin.emit.calledWith("digitalWrite", 1)).to.be.ok;
 		   });
 
 		   it("returns the passed value", () => {
@@ -180,7 +180,7 @@ describe("DigitalPin",() =>{
 
 		      it("emits an error message", () => {
 		        pin.digitalWrite(1);
-		        expect(pin.emit).to.be.calledWith("error");
+		        expect(pin.emit.calledWith("error")).to.be.ok;
 		      });
 		    });
 		    
@@ -208,7 +208,7 @@ describe("DigitalPin",() =>{
 		          it("sets the pin mode to 'r'", () => {
 		            pin.mode = "w";
 		            pin.digitalRead(500);
-		            expect(pin._setMode).to.be.calledWith("r");
+		            expect(pin._setMode.calledWith("r")).to.be.ok;
 		          });
 		        });
 
@@ -237,7 +237,7 @@ describe("DigitalPin",() =>{
 		            pin.digitalRead(500);
 		            this.clock.tick(510);
 
-		            expect(pin.emit).to.be.calledWith("digitalRead", 1);
+		            expect(pin.emit.calledWith("digitalRead", 1)).to.be.ok;
 		          });
 		        });
 
@@ -256,7 +256,7 @@ describe("DigitalPin",() =>{
 		            pin.digitalRead(500);
 		            this.clock.tick(500);
 
-		            expect(pin.emit).to.be.calledWith("error");
+		            expect(pin.emit.calledWith("error")).to.be.ok;
 		          });
 		        });
 		      });
@@ -275,7 +275,7 @@ describe("DigitalPin",() =>{
 
 		    it("calls .digitalWrite with a value of 1", () => {
 		      pin.setHigh();
-		      expect(pin.digitalWrite).to.be.calledWith(1);
+		      expect(pin.digitalWrite.calledWith(1)).to.be.ok;
 		    });
 		  });
 
@@ -290,7 +290,7 @@ describe("DigitalPin",() =>{
 
 		    it("calls .digitalWrite with a value of 0", () => {
 		      pin.setLow();
-		      expect(pin.digitalWrite).to.be.calledWith(0);
+		      expect(pin.digitalWrite.calledWith(0)).to.be.ok;
 		    });
 		  });
 
@@ -344,7 +344,7 @@ describe("DigitalPin",() =>{
 
 		      it("writes the pin number to the GPIO export path", () => {
 		        pin._createGPIOPin();
-		        expect(fs.writeFile).to.be.calledWith(path, "4");
+		        expect(fs.writeFile.calledWith(path, "4")).to.be.ok;
 		      });
 
 		      it("calls ._openPin", () => {
@@ -366,7 +366,7 @@ describe("DigitalPin",() =>{
 
 		      it("emits an error", () => {
 		        pin._createGPIOPin();
-		        expect(pin.emit).to.be.calledWith("error");
+		        expect(pin.emit.calledWith("error")).to.be.ok;
 		      });
 		    });
 		  });
@@ -384,12 +384,12 @@ describe("DigitalPin",() =>{
 
 		    it("sets the pin's mode", () => {
 		      pin._openPin();
-		      expect(pin._setMode).to.be.calledWith(pin.mode);
+		      expect(pin._setMode.calledWith(pin.mode)).to.be.ok;
 		    });
 
 		    it("emits the 'open' event", () => {
 		      pin._openPin();
-		      expect(pin.emit).to.be.calledWith("open");
+		      expect(pin.emit.calledWith("open")).to.be.ok;
 		    });
 		  });
 
@@ -405,7 +405,7 @@ describe("DigitalPin",() =>{
 		      });
 
 		      it("emits an error", () => {
-		        expect(pin.emit).to.be.calledWith("error");
+		        expect(pin.emit.calledWith("error")).to.be.ok;
 		      });
 		    });
 
@@ -420,7 +420,7 @@ describe("DigitalPin",() =>{
 		      });
 
 		      it("emits a 'close' event with the pin number", () => {
-		        expect(pin.emit).to.be.calledWith("close", "4");
+		        expect(pin.emit.calledWith("close", "4")).to.be.ok;
 		      });
 		    });
 		  });
@@ -441,19 +441,19 @@ describe("DigitalPin",() =>{
 		    context("when mode is 'w'", () => {
 		      it("writes to the pin's direction path with 'out'", () => {
 		        pin._setMode("w");
-		        expect(fs.writeFile).to.be.calledWith(path, "out");
+		        expect(fs.writeFile.calledWith(path, "out")).to.be.ok;
 		      });
 
 		      it("calls ._setModeCallback with any error message", () => {
 		        pin._setMode("w", true);
-		        expect(pin._setModeCallback).to.be.calledWith("error", true);
+		        expect(pin._setModeCallback.calledWith("error", true)).to.be.ok;
 		      });
 		    });
 
 		    context("when mode is 'r'", () => {
 		      it("writes to the pin's direction path with 'in'", () => {
 		        pin._setMode("r");
-		        expect(fs.writeFile).to.be.calledWith(path, "in");
+		        expect(fs.writeFile.calledWith(path, "in")).to.be.ok;
 		      });
 		    });
 		  });
@@ -477,7 +477,7 @@ describe("DigitalPin",() =>{
 		      context("when emitConnect is true", () => {
 		        it("emits a 'connect' event with the pin's mode", () => {
 		          pin._setModeCallback(false, true);
-		          expect(pin.emit).to.be.calledWith("connect", pin.mode);
+		          expect(pin.emit.calledWith("connect", pin.mode)).to.be.ok;
 		        });
 		      });
 		    });
@@ -485,7 +485,7 @@ describe("DigitalPin",() =>{
 		    context("when passed an error", () => {
 		      it("emits an error", () => {
 		        pin._setModeCallback(true);
-		        expect(pin.emit).to.be.calledWith("error");
+		        expect(pin.emit.calledWith("error")).to.be.ok;
 		      });
 		    });
 		  });

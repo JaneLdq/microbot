@@ -1,7 +1,7 @@
 /**
  * pwmPin test for raspberrypi
  */
-const PwmPin = lib("pwm-pin");
+const PwmPin = lib("platforms/raspberrypi/pwm-pin");
 
 describe("PwmPin", () => {
   const pin = new PwmPin({});

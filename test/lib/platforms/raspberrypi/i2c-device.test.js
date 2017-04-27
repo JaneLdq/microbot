@@ -2,8 +2,8 @@
  * i2c-device test for raspberrypi
  */
 
-const I2CDevice = lib("i2c-device"),
-    MockI2C = lib("i2c");
+const I2CDevice = lib("platforms/raspberrypi/i2c-device"),
+    MockI2C = lib("platforms/raspberrypi/i2c");
 
 const EventEmitter = require("events").EventEmitter;
 
@@ -34,7 +34,7 @@ function compareBuffers(a, b) {
 }
 
 describe("I2CDevice", () => {
-  const device, wire;
+  let device, wire;
 
   beforeEach(() => {
     MockI2C.openSync = () => {
@@ -62,7 +62,7 @@ describe("I2CDevice", () => {
   });
 
   describe(".write", () => {
-    const callback;
+    let callback;
 
     beforeEach(() => {
       callback = spy();
@@ -71,9 +71,9 @@ describe("I2CDevice", () => {
     });
 
     it("writes a set of bytes to the I2C connection", () => {
-      const call = wire.i2cWrite.firstCall;
+      let call = wire.i2cWrite.firstCall;
 
-      const bufsMatch = compareBuffers(
+      let bufsMatch = compareBuffers(
         new Buffer(["command"].concat([1, 2, 3])),
         call.args[2]
       );
@@ -84,7 +84,7 @@ describe("I2CDevice", () => {
   });
 
   describe(".read", () => {
-    const callback;
+    let callback;
 
     beforeEach(() => {
       callback = spy();
@@ -93,7 +93,7 @@ describe("I2CDevice", () => {
     });
 
     it("reads register from I2C connection", () => {
-      const call = wire.readI2cBlock.firstCall;
+      let call = wire.readI2cBlock.firstCall;
 
       expect(call.args[0]).to.be.eql(0x4A);
       expect(call.args[1]).to.be.eql("c");
@@ -102,7 +102,7 @@ describe("I2CDevice", () => {
   });
 
   describe(".writeByte", () => {
-    const callback;
+    let callback;
 
     beforeEach(() => {
       callback = spy();
@@ -116,7 +116,7 @@ describe("I2CDevice", () => {
   });
 
   describe(".readByte", () => {
-    const callback;
+    let callback;
 
     beforeEach(() => {
       callback = spy();
