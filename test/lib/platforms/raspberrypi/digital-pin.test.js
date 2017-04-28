@@ -8,6 +8,15 @@ const DigitalPin = lib("platforms/raspberrypi/digital-pin");
       
 describe("DigitalPin",() =>{
 	const pin = new DigitalPin({ pin: "4", mode: "w" });
+	let errorHandler;
+	beforeEach(() =>{
+		errorHandler = spy();
+		pin.on('error',errorHandler);
+	});
+	
+	afterEach(()=>{
+		pin.removeListener('error',errorHandler);
+	});
 	
 	describe("constructor",() =>{
 		it("sets <pinNum> to the pin number passed in opts", () =>{
@@ -221,7 +230,7 @@ context("when successful", () => {
 
 afterEach(() => {
     fs.readFile.restore();
-pin.emit.restore();
+    pin.emit.restore();
 });
 
 it("requests the pin value on the specified interval", () => {

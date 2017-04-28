@@ -111,7 +111,7 @@ describe("I2CDevice", () => {
     });
 
     it("writes a single byte to the I2C connection", () => {
-      expect(wire.sendByte).to.be.calledWith(0x4A, 1, callback);
+      expect(wire.sendByte.calledWith(0x4A, 1, callback)).to.be.ok;
     });
   });
 
@@ -125,7 +125,7 @@ describe("I2CDevice", () => {
     });
 
     it("reads a single byte from the I2C connection", () => {
-      expect(wire.receiveByte).to.be.calledWith(0x4A, callback);
+      expect(wire.receiveByte.calledWith(0x4A, callback)).to.be.ok;
     });
   });
 });

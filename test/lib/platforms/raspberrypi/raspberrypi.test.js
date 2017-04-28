@@ -9,17 +9,21 @@ const Raspberrypi = adaptor("raspberrypi"),
       I2CDevice = lib("platforms/raspberrypi/i2c-device"),
       PwmPin = lib('platforms/raspberrypi/pwm-pin'),
       MockI2C = lib("platforms/raspberrypi/i2c");
+      DigitalPin = lib('platforms/raspberrypi/digital-pin');
 
 describe("Adaptor.Raspberrypi", () => {
   let raspi;
 
   beforeEach(() => {
-    raspi = new Raspberrypi();
+    raspi = new Raspberrypi({
+		name: 'Raspberrypi',
+		port: 'COM2'
+	});
   });
 
-  it("is an instance of Cylon.Adaptor", () => {
+  it("is an instance of Microbot.Adaptor", () => {
     expect(raspi).to.be.an.instanceOf(Raspberrypi);
-    expect(raspi).to.be.an.instanceOf(Cylon.Adaptor);
+    expect(raspi).to.be.an.instanceOf(Adaptor);
   });
 
   describe("constructor", () => {
@@ -62,11 +66,11 @@ describe("Adaptor.Raspberrypi", () => {
     });
 
     it("proxies methods to the board", () => {
-      expect(raspi.proxyMethods).to.be.calledWith(
-        raspi.commands,
-        raspi.board,
-        raspi
-      );
+      expect(raspi.proxyMethods.calledWith(
+    	        raspi.commands,
+    	        raspi.board,
+    	        raspi
+    	      )).to.be.ok;
     });
 
     it("sets <revision> based on CPU info", () => {
@@ -143,15 +147,15 @@ describe("Adaptor.Raspberrypi", () => {
     });
 
     it("sets the pin to read mode", () => {
-      expect(raspi._digitalPin).to.be.calledWith(3);
+      expect(raspi._digitalPin.calledWith(3)).to.be.ok;
     });
 
     it("attaches a listener for 'digitalRead'", () => {
-      expect(pin.on).to.be.calledWith("digitalRead");
+      expect(pin.on.calledWith("digitalRead")).to.be.ok;
     });
 
     it("attaches a listener for 'connect'", () => {
-      expect(pin.on).to.be.calledWith("connect");
+      expect(pin.on.calledWith("connect")).to.be.ok;
     });
 
     it("connects to the pin", () => {
@@ -164,7 +168,7 @@ describe("Adaptor.Raspberrypi", () => {
       });
 
       it("calls .digitalRead on the pin", () => {
-        expect(pin.digitalRead).to.be.calledWith(20);
+        expect(pin.digitalRead.calledWith(20)).to.be.ok;
       });
     });
 
@@ -174,13 +178,13 @@ describe("Adaptor.Raspberrypi", () => {
       });
 
       it("responds with the pin value", () => {
-        expect(raspi.respond).to.be.calledWith(
-          "digitalRead",
-          callback,
-          null,
-          1,
-          3
-        );
+        expect(raspi.respond.calledWith(
+                "digitalRead",
+                callback,
+                null,
+                1,
+                3
+              )).to.be.ok;
       });
     });
   });
@@ -201,15 +205,15 @@ describe("Adaptor.Raspberrypi", () => {
     });
 
     it("sets the pin to Write mode", () => {
-      expect(raspi._digitalPin).to.be.calledWith(3);
+      expect(raspi._digitalPin.calledWith(3)).to.be.ok;
     });
 
     it("attaches a listener for 'digitalWrite'", () => {
-      expect(pin.on).to.be.calledWith("digitalWrite");
+      expect(pin.on.calledWith("digitalWrite")).to.be.ok;
     });
 
     it("attaches a listener for 'connect'", () => {
-      expect(pin.on).to.be.calledWith("connect");
+      expect(pin.on.calledWith("connect")).to.be.ok;
     });
 
     it("connects to the pin", () => {
@@ -222,7 +226,7 @@ describe("Adaptor.Raspberrypi", () => {
       });
 
       it("calls .digitalWrite on the pin", () => {
-        expect(pin.digitalWrite).to.be.calledWith(1);
+        expect(pin.digitalWrite.calledWith(1)).to.be.ok;
       });
     });
 
@@ -232,13 +236,13 @@ describe("Adaptor.Raspberrypi", () => {
       });
 
       it("responds with the pin value", () => {
-        expect(raspi.respond).to.be.calledWith(
-          "digitalWrite",
-          callback,
-          null,
-          1,
-          3
-        );
+        expect(raspi.respond.calledWith(
+                "digitalWrite",
+                callback,
+                null,
+                1,
+                3
+              )).to.be.ok;
       });
     });
   });
@@ -258,11 +262,11 @@ describe("Adaptor.Raspberrypi", () => {
     });
 
     it("writes a command and buffer to an i2c device", () => {
-      expect(raspi._i2cDevice).to.be.calledWith(0x4a);
-      expect(device.write).to.be.calledWith("cmd", [1, 2, 3]);
+      expect(raspi._i2cDevice.calledWith(0x4a)).to.be.ok;
+      expect(device.write.calledWith("cmd", [1, 2, 3])).to.be.ok;
 
       raspi.i2cWrite(0x4a, "cmd");
-      expect(device.write).to.be.calledWith("cmd", []);
+      expect(device.write.calledWith("cmd", [])).to.be.ok;
     });
 
     describe("when done writing", () => {
@@ -271,9 +275,9 @@ describe("Adaptor.Raspberrypi", () => {
       });
 
       it("responds with the address, command, and buffer", () => {
-        expect(raspi.respond).to.be.calledWith(
+        expect(raspi.respond.calledWith(
           "i2cWrite", callback, null, 0x4a, "cmd", [1, 2, 3]
-        );
+        )).to.be.ok;
       });
     });
   });
@@ -293,8 +297,8 @@ describe("Adaptor.Raspberrypi", () => {
     });
 
     it("reads from an i2c device", () => {
-      expect(raspi._i2cDevice).to.be.calledWith(0x4a);
-      expect(device.read).to.be.calledWith("cmd", 1024);
+      expect(raspi._i2cDevice.calledWith(0x4a)).to.be.ok;
+      expect(device.read.calledWith("cmd", 1024)).to.be.ok;
     });
 
     describe("when done reading", () => {
@@ -303,9 +307,9 @@ describe("Adaptor.Raspberrypi", () => {
       });
 
       it("responds with the error and data", () => {
-        expect(raspi.respond).to.be.calledWith(
+        expect(raspi.respond.calledWith(
           "i2cRead", callback, "err", "data"
-        );
+        )).to.be.ok;
       });
     });
   });
@@ -349,7 +353,7 @@ describe("Adaptor.Raspberrypi", () => {
     });
 
     it("calls pin.pwmWrite with the provided value", () => {
-      expect(pin.pwmWrite).to.be.calledWith(1);
+      expect(pin.pwmWrite.calledWith(1)).to.be.ok;
     });
 
     context("when the 'pwmWrite' event is triggered", () => {
@@ -358,9 +362,9 @@ describe("Adaptor.Raspberrypi", () => {
       });
 
       it("responds with the written value", () => {
-        expect(raspi.respond).to.be.calledWith(
+        expect(raspi.respond.calledWith(
           "pwmWrite", callback, null, 1, 10
-        );
+        )).to.be.ok;
       });
     });
 
@@ -371,13 +375,13 @@ describe("Adaptor.Raspberrypi", () => {
       });
 
       it("calls pin.servoWrite", () => {
-        expect(pin.servoWrite).to.be.calledWith(0);
+        expect(pin.servoWrite.calledWith(0)).to.be.ok;
       });
 
       it("responds with 'servoWrite' when done", () => {
-        expect(raspi.respond).to.be.calledWith(
+        expect(raspi.respond.calledWith(
           "servoWrite", callback, null, 0, 12
-        );
+        )).to.be.ok;
       });
     });
   });
@@ -393,7 +397,7 @@ describe("Adaptor.Raspberrypi", () => {
     });
 
     it("calls ._pwmWrite", () => {
-      expect(raspi._pwmWrite).to.be.calledWith(10, 20, callback, "pwm");
+      expect(raspi._pwmWrite.calledWith(10, 20, callback, "pwm")).to.be.ok;
     });
   });
 
@@ -408,7 +412,7 @@ describe("Adaptor.Raspberrypi", () => {
     });
 
     it("calls ._pwmWrite", () => {
-      expect(raspi._pwmWrite).to.be.calledWith(10, 20, callback, "servo");
+      expect(raspi._pwmWrite.calledWith(10, 20, callback, "servo")).to.be.ok;
     });
   });
 
@@ -454,7 +458,7 @@ describe("Adaptor.Raspberrypi", () => {
     context("if the pin isn't initialized", () => {
       it("instantiates a digitalPin", () => {
         const pin = raspi._digitalPin(6);
-        expect(pin).to.be.an.instanceOf(Cylon.IO.DigitalPin);
+        expect(pin).to.be.an.instanceOf(DigitalPin);
         expect(pin).to.be.eql(raspi.pins[7]);
       });
     });
