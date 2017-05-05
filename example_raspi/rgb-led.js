@@ -1,6 +1,6 @@
 let Microbot = require('../index.js');
 
-let mike = Microbot.robot({
+let bob = Microbot.robot({
   name: "Bob",
   devices: {
     led_1: {
@@ -15,9 +15,9 @@ let mike = Microbot.robot({
   },
   connections: {
     // arduino_A: {adaptor: 'arduino', port: 'COM3'}
-    arduino_A: {
+	  raspberrypi_A: {
       adaptor: 'raspberrypi',
-      port: '/dev/ttyACM0'
+      port: '/dev/ttyAMA0'
     }
     // arduino_B: {adaptor: 'arduino', port: 'COM3'}
   },

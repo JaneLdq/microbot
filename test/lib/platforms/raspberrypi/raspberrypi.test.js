@@ -184,7 +184,7 @@ describe("Adaptor.Raspberrypi", () => {
                 null,
                 1,
                 3
-              )).to.be.ok;
+              )).to.be.ok; 
       });
     });
   });
