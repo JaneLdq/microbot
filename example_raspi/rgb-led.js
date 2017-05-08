@@ -6,9 +6,9 @@ let bob = Microbot.robot({
     led_1: {
       driver: 'rgb-led',
       connection: 'raspberrypi_A',
-      redPin: 9,
-      greenPin: 10,
-      bluePin: 11
+      redPin: 7,
+      greenPin: 12,
+      bluePin: 16
     },
     // led_2: {driver: 'led', connection: 'arduino_B', pin: 10}
     // button: {driver: 'button', connection: 'arduino_A', pin: 2}

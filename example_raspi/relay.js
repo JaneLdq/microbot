@@ -7,7 +7,7 @@ let bob = Microbot.robot({
     relay: {
       driver: 'relay',
       connection: 'raspberrypi_A',
-      pin: 9
+      pin: 7
     }
   },
   connections: {
