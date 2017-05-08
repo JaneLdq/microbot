@@ -5,7 +5,8 @@ let mike = Microbot.robot({
   name: "Mike",
   devices: {
     blinkm: {
-      driver: 'blinkm'
+      driver: 'blinkm',
+      connection: 'arduino'
     }
   },
   connections: {
