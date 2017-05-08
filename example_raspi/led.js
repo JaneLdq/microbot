@@ -4,27 +4,31 @@ let Microbot = require('../index.js');
 let bob = Microbot.robot({
 	name: "Bob",
 	devices: {
-		led_1: {driver: 'led', connection: 'raspberrypi_A', pin: 2},
-		button: {driver: 'button', connection: 'raspberrypi_A', pin: 7}
+		led: {driver: 'led', connection: 'raspberrypi_A', pin:12},   //pin-13 is broken
+        button: {driver: 'button', connection: 'raspberrypi_A', pin: 7}
+		
 	},
 	connections: {
-		raspberrypi_A: {adaptor: 'raspberrypi'}
+		raspberrypi_A: {adaptor: 'raspberrypi',port:'/dev/ttyAMA0'}
 		
 	},
 	run: function() {
-		// setInterval(() => {
-		// 	this.led_1.toggle();
-		// }, 2000);
-		// setInterval(() => {
-		// 	this.led_2.toggle();
-		// }, 1000);
+
 		this.button.on('push', ()=> {
 			 console.log('push');
-			 this.led_1.turnOn();
+			 this.led.turnOn();
 		});
 		this.button.on('release', ()=> {
 			 console.log('release');
-			 this.led_1.turnOff();
+			 this.led.turnOff();
 		});
+
+/*
+		setInterval(() => {
+             console.log('test starts led blink');
+			this.led.toggle();
+		}, 2000);
+*/
+		 
 	}
 }).start();

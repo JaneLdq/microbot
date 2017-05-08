@@ -6,7 +6,7 @@ let bob = Microbot.robot({
     sensor: {
       driver: 'temperature-sensor',
       connection: 'raspberrypi_A',
-      pin: 0
+      pin: 7
     }
   },
   connections: {
