@@ -16,13 +16,10 @@ let mike = Microbot.robot({
     }
   },
   run: function() {
-    var analogValue = 0;
+    var temperature = 0;
 
     setInterval(() => {
-      analogValue = this.sensor.analogRead();
-      this.sensor.celsius();
-      voltage = (analogValue * 5.0) / 1024;
-      temperature = (voltage - 0.5) * 100;
+      temperature = this.sensor.celsius();
 
       console.log('Current Temperature => ', temperature);
     }, 5000);
