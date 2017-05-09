@@ -1,6 +1,6 @@
 "use strict";
 
-var AnalogSensor = lib("analog-sensor");
+var AnalogSensor = lib("drivers/gpio/analog-sensor");
 
 describe("AnalogSensor", function() {
   var driver;
@@ -79,7 +79,7 @@ describe("AnalogSensor", function() {
     });
 
     it("tells the connection to #analogRead the pin", function() {
-      expect(driver.connection.analogRead).to.be.calledWith(13);
+      expect(driver.connection.analogRead.calledWith(13)).to.be.called;
     });
 
     it("sets @analogVal to the read value", function() {
@@ -87,7 +87,7 @@ describe("AnalogSensor", function() {
     });
 
     it("emits the 'analogRead' event with the read value", function() {
-      expect(driver.emit).to.be.calledWith("analogRead", 75);
+      expect(driver.emit.calledWith("analogRead", 75)).to.be.called;
     });
 
     context("when a value under the lower limit is read", function() {
@@ -97,11 +97,11 @@ describe("AnalogSensor", function() {
       });
 
       it("emits the 'analogRead' event with the read value", function() {
-        expect(driver.emit).to.be.calledWith("analogRead", -1);
+        expect(driver.emit.calledWith("analogRead", -1)).to.be.called;
       });
 
       it("emits the 'lowerLimit' event with the read value", function() {
-        expect(driver.emit).to.be.calledWith("lowerLimit", -1);
+        expect(driver.emit.calledWith("lowerLimit", -1)).to.be.called;
       });
     });
 
@@ -112,11 +112,11 @@ describe("AnalogSensor", function() {
       });
 
       it("emits the 'analogRead' event with the read value", function() {
-        expect(driver.emit).to.be.calledWith("analogRead", 360);
+        expect(driver.emit.calledWith("analogRead", 360)).to.be.called;
       });
 
       it("emits the 'upperLimit' event with the read value", function() {
-        expect(driver.emit).to.be.calledWith("upperLimit", 360);
+        expect(driver.emit.calledWith("upperLimit", 360)).to.be.called;
       });
     });
   });
