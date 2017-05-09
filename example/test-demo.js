@@ -59,28 +59,40 @@ let mike = Microbot.robot({
 		}
 	}
 	// robot.start()，启动服务并调用run
-}).start();
+});//.start();
 
 // robot2
 let sam = Microbot.robot({
 	name: "Sam",
-	connections: {},
-	devices: {},
+	devices: {
+		led: {
+			driver: 'led', 
+			connection: 'arduino', 
+			pin: 9
+		}
+	},
+	connections: {
+		arduino: {
+			adaptor: 'arduino', 
+			port: 'COM4'
+		}
+	},
 	run: function() {
 		this.service.subscribe({broker: '127.0.0.1', topic:'/jerry'}, (err, data) => {
 			if (!err) {
 				console.log("Sam gets from topic '/jerry': '" + data.msg + " " + data.else +"'");
+				this.led.blink(500);
 			} else {
 				console.log(err);
 			}
 		});
-		this.service.subscribe('/tom', (err, data) => {
-			if (!err) {
-				console.log("Sam gets from topic '/tom': '" + data.msg + " " + data.question +"'");
-			} else {
-				console.log(err);
-			}
-		});
+		// this.service.subscribe('/tom', (err, data) => {
+		// 	if (!err) {
+		// 		console.log("Sam gets from topic '/tom': '" + data.msg + " " + data.question +"'");
+		// 	} else {
+		// 		console.log(err);
+		// 	}
+		// });
 	},
 	sayHi: function(name) {
 		return "Hi " + name + ", I am Sam!";
@@ -117,7 +129,7 @@ let tom = Microbot.robot({
 			host: '127.0.0.1'
 		}
 	}
-}).start();
+});//.start();
 
 let jerry = Microbot.robot({
 	name: "Jerry",
@@ -129,7 +141,7 @@ let jerry = Microbot.robot({
 				topic: '/jerry', 
 				payload: { msg: 'I am Jerry', else: 'Nice to meet you!'}
 			});
-		}, 15000);
+		}, 3000);
 	},
 	service: {
 		name: "Jerry's Service",
