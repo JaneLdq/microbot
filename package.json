@@ -19,12 +19,13 @@
     "express": "^4.15.2",
     "firmata": "^0.15.0",
     "jade": "^1.11.0",
-    "lodash": "~4.17.4",
+    "lodash": "^4.17.4",
     "mosca": "~2.3.0",
     "mqtt": "~1.0.10",
     "pug": "^2.0.0-beta11",
     "request": "~2.81.0",
-    "request-promise-native": "~1.0.3"
+    "request-promise-native": "~1.0.3",
+    "socket.io": "^2.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
