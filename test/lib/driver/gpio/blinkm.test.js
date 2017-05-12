@@ -153,21 +153,6 @@ describe("I2C.BlinkM", function() {
     });
   });
 
-  // describe("#getRGBColor", function() {
-  //   beforeEach(function() {
-  //     driver.connection.i2cRead = spy();
-  //   });
-  //
-  //   it("uses #i2cRead to get the RGB color", function() {
-  //     driver.getRGBColor();
-  //     expect(driver.connection.i2cRead.calledWith(
-  //       driver.address,
-  //       0x67,
-  //       3
-  //     )).to.be.called;
-  //   });
-  // });
-
   describe("#getAddress", function() {
     beforeEach(function() {
       driver.connection.i2cRead = spy();
