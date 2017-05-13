@@ -11,7 +11,7 @@ let rosie = Microbot.robot({
   },
   events: ['turned_on', 'turned_off', 'toggle'],
   devices: {
-    led_1: {
+    led: {
       driver: 'led',
       connection: 'arduino_A',
       pin: 13
@@ -59,18 +59,20 @@ let rosie = Microbot.robot({
     // we are going to be interacting
     // with the robot using the code in
     // ./blink-client.html.
-    after((2).seconds(), function() {
-      this.turnOn();
-    }.bind(this));
 
-    after((5).seconds(), function() {
+    setTimeout(() => {
+      this.turnOn();
+    }, 2000);
+
+    setTimeout(() => {
       this.turnOff();
-    }.bind(this));
+    }, 5000);
+
   },
 
   service: {
-		protocol:'socket',
-		host: '127.0.0.1',
+    protocol: 'socket',
+    host: '127.0.0.1',
     port: '3000'
   }
 
