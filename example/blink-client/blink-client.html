@@ -58,8 +58,12 @@
   var robot;
 
   window.onload = function() {
+
+
+    console.log('-----------');
     // We connect to the device defined in the robot
     robot = io('http://127.0.0.1:3000/api/robots/rosie');
+    console.log('++++++++++++');
 
     // Listen to the 'message' event on device
     robot.on('message', function(msg) {
@@ -97,6 +101,7 @@
 
     $('#turn_on').click(function() {
       console.log("heiheihei");
+      console.log(robot);
       robot.emit('turn_on');
     });
 
