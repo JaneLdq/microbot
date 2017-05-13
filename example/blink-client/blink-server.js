@@ -1,7 +1,7 @@
 let Microbot = require('../../index.js');
 
 let rosie = Microbot.robot({
-	name: "rosie",
+  name: "rosie",
   commands: function() {
     return {
       turn_on: this.turnOn,
@@ -10,12 +10,20 @@ let rosie = Microbot.robot({
     };
   },
   events: ['turned_on', 'turned_off', 'toggle'],
-	devices: {
-		led_1: {driver: 'led', connection: 'arduino_A', pin: 13}
-	},
-	connections: {
-		arduino_A: {adaptor: 'arduino', port: '/dev/cu.usbmodem1421', desc: 'StarDuino UNO'}
-	},
+  devices: {
+    led_1: {
+      driver: 'led',
+      connection: 'arduino_A',
+      pin: 13
+    }
+  },
+  connections: {
+    arduino_A: {
+      adaptor: 'arduino',
+      port: '/dev/cu.usbmodem1421',
+      desc: 'StarDuino UNO'
+    }
+  },
   Atoggle: function() {
     this.led.toggle();
     if (this.led.isOn()) {
@@ -60,9 +68,11 @@ let rosie = Microbot.robot({
     }.bind(this));
   },
 
-  socketio: {
-    host: '127.0.0.1',
+  service: {
+		protocol:'socket',
+		host: '127.0.0.1',
     port: '3000'
   }
+
 
 }).start();
