@@ -52,18 +52,15 @@
     }
   </style>
 </head>
-<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script src="https://cdn.bootcss.com/socket.io/2.0.1/socket.io.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script type="text/javascript">
   var robot;
 
   window.onload = function() {
 
-
-    console.log('-----------');
     // We connect to the device defined in the robot
-    robot = io('http://127.0.0.1:3000/api/robots/rosie');
-    console.log('++++++++++++');
+    robot = io('http://127.0.0.1:3000/api/robot/rosie');
 
     // Listen to the 'message' event on device
     robot.on('message', function(msg) {
