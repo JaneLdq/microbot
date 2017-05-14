@@ -64,15 +64,20 @@
 
     // Listen to the 'message' event on device
     robot.on('message', function(msg) {
+      console.log('------Message--------');
       console.log(msg);
       $('#messages').append($('<li>').text(msg));
     });
 
     robot.on('turned_on', function(data) {
+      console.log('-------TurnOn------');
+      console.log(data);
       console.log(data + 'The robot "chappie" just turned ON its led!!!');
     });
 
     robot.on('turned_off', function(data) {
+      console.log('-------TurnOff------');
+      console.log(data);
       console.log(data + 'The robot "chappie" just turned OFF its led!!!');
     });
 
